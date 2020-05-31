@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Calendar
+Comment=Organise your schedule
+Exec=/usr/bin/application-wrapper calendar
+Icon=/usr/share/xlunch/icons/numix/calendar-black-31.png
+Terminal=false

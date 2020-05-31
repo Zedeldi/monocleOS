@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Calculator
+Comment=Crunch some numbers
+Exec=/usr/bin/application-wrapper calculator
+Icon=/usr/share/xlunch/icons/numix/calc.png
+Terminal=false

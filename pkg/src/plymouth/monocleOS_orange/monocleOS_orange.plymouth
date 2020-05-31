@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=monocleOS
+Description=Orange monocleOS boot animation for Plymouth based on Numix.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/monocleOS_orange
+ScriptFile=/usr/share/plymouth/themes/monocleOS_orange/monocleOS_orange.script

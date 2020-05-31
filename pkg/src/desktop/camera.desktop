@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Camera
+Comment=Take a picture
+Exec=/usr/bin/application-wrapper camera
+Icon=/usr/share/xlunch/icons/numix/accessories-camera.png
+Terminal=false

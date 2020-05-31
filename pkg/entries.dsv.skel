@@ -1,0 +1,15 @@
+#Calculator;/usr/share/xlunch/icons/numix/calc.png;/usr/bin/application-wrapper calculator
+#Calendar;/usr/share/xlunch/icons/numix/calendar-black-31.png;/usr/bin/application-wrapper calendar
+#Camera;/usr/share/xlunch/icons/numix/accessories-camera.png;/usr/bin/application-wrapper camera
+#Email;/usr/share/xlunch/icons/numix/internet-mail.png;/usr/bin/application-wrapper email
+#Files;/usr/share/xlunch/icons/numix/file-manager.png;/usr/bin/application-wrapper files
+#Games;/usr/share/xlunch/icons/numix/gnome-arcade.png;/usr/bin/application-wrapper games
+#Media Player;/usr/share/xlunch/icons/numix/vlc.png;/usr/bin/application-wrapper media_player
+#Office;/usr/share/xlunch/icons/numix/libreoffice-writer.png;/usr/bin/application-wrapper office
+#Web;/usr/share/xlunch/icons/numix/web-browser.png;/usr/bin/application-wrapper web
+Settings;/usr/share/xlunch/icons/numix/preferences-system.png;/usr/bin/application-wrapper settings
+#Magnifier;/usr/share/xlunch/icons/numix/search.png;/usr/bin/application-wrapper magnifier
+#Screenshot;/usr/share/xlunch/icons/numix/accessories-screenshot.png;/usr/bin/application-wrapper screenshot
+#Lock;/usr/share/xlunch/themes/color_circle/icons/lock.png;/usr/bin/application-wrapper lock
+#Sleep;/usr/share/xlunch/themes/color_circle/icons/suspend.png;/usr/bin/application-wrapper sleep
+Turn Off;/usr/share/xlunch/themes/color_circle/icons/shutdown.png;/usr/bin/application-wrapper turn_off

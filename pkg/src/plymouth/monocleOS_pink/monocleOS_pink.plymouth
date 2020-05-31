@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=monocleOS_pink
+Description=Pink monocleOS boot animation for Plymouth based on Numix.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/monocleOS_pink
+ScriptFile=/usr/share/plymouth/themes/monocleOS_pink/monocleOS_pink.script

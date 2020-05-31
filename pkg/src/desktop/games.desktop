@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Games
+Comment=Play some games
+Exec=/usr/bin/application-wrapper games
+Icon=/usr/share/xlunch/icons/numix/gnome-arcade.png
+Terminal=false

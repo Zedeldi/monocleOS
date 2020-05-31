@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Settings
+Comment=Personalise your PC
+Exec=/usr/bin/application-wrapper settings
+Icon=/usr/share/xlunch/icons/numix/preferences-system.png
+Terminal=false

@@ -1,0 +1,12 @@
+[Unit]
+Description=Scanning of for downloads harmful files
+
+[Service]
+Type=simple
+ExecStart=clamscan -r --remove /home/user/Downloads
+TimeoutStopSec=20
+KillMode=process
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

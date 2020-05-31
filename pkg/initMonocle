@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# initMonocle - executed on first boot to configure basic system
+# Copyright (C) 2020  Zack Didcott
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+if [ ! -e /home/$1/.firstBoot ]; then
+	zenity --width 200 --error --title="Exiting..." --text="This program should only be run on the first boot."
+	exit 1
+elif [ ! "$(id -u)" -eq 0 ]; then
+	zenity --width 200 --error --title="Exiting..." --text="This program must be run as root."
+	exit 1
+elif [ ! -e /priv/defaultKey.bin ]; then
+	zenity --width 200 --error --title="Exiting..." --text="Key does not exist or access denied."
+	exit 1
+fi
+
+source /etc/monocleOS.env
+
+region="Europe"
+city="London"
+locale="en_GB.UTF-8"
+vconsole="uk"
+xkeymap="gb"
+paperSize="a4"
+password=""
+confirmPW=""
+
+(
+echo "10"; sleep 5
+echo "# Setting the time..."; ln -sf /usr/share/zoneinfo/$region/$city /etc/localtime
+echo "20"; sleep 1
+echo "# Setting the time..."; hwclock --systohc
+echo "30"; sleep 1
+echo "# Setting language..."; sed -i '/'$locale'/s/^#//g' /etc/locale.gen
+echo "40"; sleep 1
+echo "# Setting language..."; locale-gen
+echo "60"; sleep 1
+echo "# Setting language..."; echo "LANG=$locale" > /etc/locale.conf
+echo "70"; sleep 1
+echo "# Setting up keyboard..."; echo "KEYMAP=$vconsole" > /etc/vconsole.conf
+echo "80"; sleep 1
+echo "# Setting up keyboard..."; localectl set-x11-keymap $xkeymap
+echo "90"; sleep 1
+echo "# Setting up printers..."; echo "$paperSize" > /etc/papersize
+echo "100"; sleep 1
+) | zenity --width 200 --progress --title="Setting up your PC" --text="We're just getting a few things ready for you..." --percentage=0 --auto-close --no-cancel
+
+while [[ "$password" != "$confirmPW" ]] || [[ "$password" == "" ]]; do
+	password=""
+	password=`zenity --password --title="Create a Password"`
+	confirmPW=`zenity --password --title="Confirm Your Password"`
+	if [[ "$password" != "$confirmPW" ]]; then 
+		zenity --width 200 --error --title="Creating Password Failed" --text="Passwords do not match. Please try again."
+	elif [[ "$password" == "" ]]; then 
+		zenity --width 200 --error --title="Creating Password Failed" --text="Password cannot be empty. Please try again."
+	fi
+done
+
+(
+echo "10"; sleep 1
+echo "# Adding password..."
+echo "$1:$password" | chpasswd || { zenity --width 200 --error --title="Adding Password Failed" --text="Unable to add password."; exit 1; }
+# Assuming password change worked
+echo -e "$password" | cryptsetup luksChangeKey -q /dev/disk/by-uuid/$luksUUID --key-file=/priv/defaultKey.bin --key-slot 0 || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
+echo "30"; sleep 1
+echo "# Adding password..."; echo "monocleOS	UUID=$luksUUID	none	luks" > /etc/crypttab.initramfs
+echo "45"; sleep 1
+echo "# Adding password..."; sed -i '/FILES/d' /etc/mkinitcpio.conf
+echo "60"; sleep 1
+echo "# Almost done..."; mkinitcpio -P || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
+echo "85"; sleep 1
+echo "# Finished."; shred -u /priv/defaultKey.bin
+echo "100"; sleep 1
+zenity --width 200 --info --title="Password Updated" --text="Password Added Successfully."
+) | zenity --width 200 --progress --title="Adding Your New Password" --text="Please wait..." --percentage=0 --auto-close --no-cancel
+
+zenity --width 200 --question --title="Create a Recovery Key" --text "Would you like to create a recovery key, in case you forget your password?\nIt is recommended to do this." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+if [ $? = 0 ]; then
+	recvKey="`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`" # Use "tr -dc '[:graph:]'" for all printable characters, not including space
+	(
+	echo "25"; sleep 1
+	echo "# Adding recovery key..."; echo -e "$password" | cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 1 # This should fail, but just in case - don't tell user
+	echo "50"; sleep 1
+	echo "# Adding recovery key..."; echo -e "$password\n$recvKey" | cryptsetup luksAddKey -q /dev/disk/by-uuid/$luksUUID --key-slot 1 || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+	echo "60"; sleep 1
+	echo "# Adding recovery key..."; echo -e "recovery:$recvKey" | chpasswd || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+	echo "75"; sleep 1
+	echo "# Saving recovery key..."; echo -e "Date: `date +'%d/%m/%y %H:%M:%S'`\nYour monocleOS recovery key for $HOSTNAME is:\n\n\t$recvKey\n\nPrint this document and keep it in a safe place." > /home/$1/Recovery_Key_${HOSTNAME}_`date +'%d%m%y%H%M%S'`.txt || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+	echo "100"; sleep 1
+	zenity --width 200 --info --title="Recovery Key Added" --text="Success! The key is stored in your files. Please print this document and keep it in a safe place."
+	) | zenity --width 200 --progress --title="Creating Recovery Key" --text="Please wait..." --percentage=0 --auto-close --no-cancel
+fi
+
+rm /home/$1/.firstBoot
+sed -i '/initMonocle/d' /etc/sudoers.d/monocleOS; visudo -cf /etc/sudoers.d/monocleOS || rm /etc/sudoers.d/monocleOS # Disallow this script from being executed by user again

@@ -1,0 +1,13 @@
+[Unit]
+Description=Automatic Updates
+After=network-online.target 
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/update
+TimeoutStopSec=180
+KillMode=process
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

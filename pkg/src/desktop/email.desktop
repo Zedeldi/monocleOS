@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Email
+Comment=Read your mail
+Exec=/usr/bin/application-wrapper email
+Icon=/usr/share/xlunch/icons/numix/internet-mail.png
+Terminal=false

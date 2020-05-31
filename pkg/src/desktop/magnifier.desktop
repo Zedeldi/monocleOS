@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Magnifier
+Comment=On-screen Magnifier
+Exec=/usr/bin/application-wrapper magnifier
+Icon=/usr/share/xlunch/icons/numix/search.png
+Terminal=false

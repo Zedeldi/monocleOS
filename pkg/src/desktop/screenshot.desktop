@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Screenshot
+Comment=Take a picture of your screen
+Exec=/usr/bin/application-wrapper screenshot
+Icon=/usr/share/xlunch/icons/numix/accessories-screenshot.png
+Terminal=false

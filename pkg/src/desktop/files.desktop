@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Files
+Comment=Manage your files
+Exec=/usr/bin/application-wrapper files
+Icon=/usr/share/xlunch/icons/numix/file-manager.png
+Terminal=false

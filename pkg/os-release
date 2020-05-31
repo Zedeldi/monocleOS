@@ -1,0 +1,9 @@
+NAME="monocleOS"
+PRETTY_NAME="monocleOS"
+ID=monocleOS
+BUILD_ID=rolling
+ANSI_COLOR="0;36"
+HOME_URL=""
+DOCUMENTATION_URL=""
+SUPPORT_URL=""
+BUG_REPORT_URL=""

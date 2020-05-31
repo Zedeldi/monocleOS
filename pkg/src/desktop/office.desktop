@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Office
+Comment=Create a document
+Exec=/usr/bin/application-wrapper office
+Icon=/usr/share/xlunch/icons/numix/libreoffice-writer.png
+Terminal=false

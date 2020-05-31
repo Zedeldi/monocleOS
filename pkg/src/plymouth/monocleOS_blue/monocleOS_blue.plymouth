@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=monocleOS_blue
+Description=Blue monocleOS boot animation for Plymouth based on Numix.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/monocleOS_blue
+ScriptFile=/usr/share/plymouth/themes/monocleOS_blue/monocleOS_blue.script

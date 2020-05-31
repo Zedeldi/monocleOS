@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = arc-gtk-theme
+
+[Action]
+Description = Updating GTK theme configuration
+When = PostTransaction
+Depends = arc-gtk-theme
+Exec = /bin/sh -c "/usr/bin/update --theme"

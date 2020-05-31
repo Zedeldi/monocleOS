@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = grub
+
+[Action]
+Description = Updating GRUB Bootloader
+When = PostTransaction
+Depends = grub
+Exec = /bin/sh -c "/usr/bin/update --grub"

@@ -1,0 +1,108 @@
+# Maintainer: Zack Didcott
+
+pkgname=monocleos
+pkgver=1
+pkgrel=1
+pkgdesc="monocleOS package"
+arch=('i686' 'x86_64')
+url=""
+license=('GPL3')
+depends=('sh' 'libx11' 'imlib2')
+makedepends=('git' 'gcc' 'make' 'sed' 'grep')
+provides=('monocleos')
+conflicts=('monocleos' 'xlunch-git')
+#'git+https://github.com/Tomas-M/xlunch.git' 'SKIP'
+source=('xlunch_precompiled' 'xlunch_menu_precompiled' 'monocleOS' 'monocleOS-recovery' 'update' 'initMonocle' 'toggleTouchpad.sh' 'entries.dsv.skel' 'dunstrc' 'i3.conf' 'polybar.conf' 'polybar.sh' 'bash_profile' 'xinitrc' 'icons.default' 'gtkSettings.ini' 'gtkrc' 'Trolltech.conf' 'pam_environment' 'autologin.conf' 'grubUpgrade.hook' 'mirrorUpgrade.hook' 'themeUpgrade.hook' 'nvidia.hook' '40-libinput.conf' '50-lockdown.conf' 'clamd.conf' 'nsswitch.conf' 'os-release' 'grub' 'launcher.conf' 'application-wrapper' 'tips-service' 'tips-service.conf' 'automatic-update.service' 'automatic-update.timer' 'clamav-scan.service' 'clamav-scan.timer' 'onboard.theme')
+sha256sums=('4e578283544c131cc3089eddda912d7013dda7ea49b1375fe40b73fb9ffd17d9'
+            'd8c2ac853a530e6e049f12da497de4232db8887633748158944bd2f6b601308c'
+            'cb331af6fc4ff6b4839f45946614c1570260497233884a8bbc7201d5c563365e'
+            'f0622aae0a29bd60505b5468546c9d1d03ff6db1ef60600529dc18889bed0040'
+            'ed5855ffc350f335762949bd6ebb6e755a084ee30831cc744063de9c06bb91fa'
+            'fc3e46c81a71fb8c16b739773d62651ed511aabe60df5dc56003dbaaf8ee0f9d'
+            'd1ad17c0b9c5848c16c81ceadc6883298c0841a3bbd28ab1d783eb01ea4470a7'
+            'b25e3f34fb820e3852770b975c5f308ebc46b70d89e830da778ca7653f028677'
+            'adc0d2a470f0f299a0aea22b0d69cd3faf3272e11b202db88b9e27037987bfe9'
+            'ffd07cc540d7a2066fce02a4d8d0448f1b8bc196ae27b56c803d749278a1accd'
+            'acd0a2d06acee8d43888510bcc6643d4bf5e4046be596403f1e45f0fb7934fad'
+            '89cc9997992ec01e91b4d702b15492053ea94daf19a161c1a2ce3d367c08bc63'
+            'c7eab30d4a506c48d0468e6b95ef812ac0cd8817d3d9c55b8d6176bd13dc9a78'
+            'f2a21065f2a5df3afcb17127966fdad79be8d3439fec7e7d20d23a3f86ff1b93'
+            'ff9c676132f801fedde204c4deea7beddb6a493520df0a66a9050646cb32b6b0'
+            '2f99e6f6a9a61538b2acd99d09f5f5d8ee58cfcaa85daf029f7c99903cdfa40c'
+            '23ed56570291e6c1e09f1b325a8fba112a1167bda8c7e5378bd3eb3ae9751142'
+            '9b0d4235f54aea86d6666d4c72afd1b9935a4d0b3ab306e3e04f0d85ab109ddf'
+            '37dcb9b30dcbfb75589ac02045268341843199e165fccc1d972fb623284c55d7'
+            '96370674ad080323f4835e84aac75f891cebff27f3a9f2282b55710684c2814c'
+            '3b150947fa88b6a87198adc273f7f8ad3ba34bce8d3bc48a98fc00628f245b57'
+            '15e91565a9e34012898e2d31b79cf5d6d83363e6fd638191c51b59cf3d4ec930'
+            '110750dccfd2f06aa8a66b4c552beaf7a918306db7aaa78866c36e148bd82bb1'
+            'f0dc23a79a14636fae81155ecd550637d718723599bfaa3011616c9f6e57c032'
+            '89d854f900ffbc2f3e23ec8364f54bbeab17a7eaf3ffebe6bbc9d688a097959a'
+            'e5d244ba8652ceda9db4aff11c63b74478367fe681daee53fdf5435c3e5be1bc'
+            'e45742be50a7ec9a99ccac6eaf6ba7c25e338ff291aa1a4be28cbf496e9c547f'
+            '8af175b737b65680eca36f7e466685cb3a00b2a4aaf8c544127ed31796cea4db'
+            'd04f7a45ffc38f9d9270269e0fc2a0d7a4fee1fb0658bb484408d10511d48e1d'
+            'b0723486fa2a2436e9ea0b7ceeb67b140ac0abe0bd1b7e7f36e79130d25f521a'
+            '45eddf00118a0a5b92b609e4a4d2d99cd81cd340e0c36ab8eaa41c32e41aaf4b'
+            'f01f1812e12e8984e43a60e2381d6b06373e6f0d9b2e2277d3f0f2a546ed6461'
+            '815cdec13cefa8d6a3f48ebc5076ea42b900283f3e26a89105ef39600bb3952d'
+            'def68aa83945a89f453686fa6ae3f2e618a8772013690dffeb19bf3bfd2b051f'
+            '60c042a6029f73876fe021cd71eae0212b788b98bde78ffe0db2ddcb10316e8c'
+            'd4b077e3bfc73e8a8c805eecdf1e738d99ddf24dc1e19c3d942d98c51c56a629'
+            'a5c709482b52d13fd5426a64d0477df00330b8bf1f1c17b4bcc329f080ffc52b'
+            '914d96ff940cf0b1924621ff58e05f85151549b0b2341ac18f37bcc4f30fc08d'
+            '1780c064138848c3f2c668d9618e2d34ef815bcda872dc8ca57c98780d9ac7ba')
+
+#build() {
+#	cd "$srcdir/xlunch"
+#	make DESTDIR="../../xlunch/"
+#}
+
+package() {
+	mkdir -p "$pkgdir"/usr/share/
+	mkdir -p "$pkgdir"/usr/share/plymouth/themes/
+	cp -R plymouth/* "$pkgdir"/usr/share/plymouth/themes/
+	cp -R backgrounds "$pkgdir"/usr/share/backgrounds
+	cp -R desktop "$pkgdir"/usr/share/desktop
+	cp -R xlunch_data "$pkgdir"/usr/share/xlunch
+	mkdir -p "$pkgdir/usr/share/monocleOS/"
+	install -Dm644 launcher.conf "$pkgdir"/etc/monocleOS/launcher.conf
+	install -Dm644 tips-service.conf "$pkgdir"/etc/monocleOS/tips-service.conf
+	install -Dm755 tips-service "$pkgdir"/usr/bin/tips-service
+	install -Dm755 application-wrapper "$pkgdir"/usr/bin/application-wrapper
+	install -Dm644 dunstrc "$pkgdir"/etc/monocleOS/dunstrc.skel
+	install -Dm644 i3.conf "$pkgdir"/etc/monocleOS/i3.conf.skel
+	install -Dm644 polybar.conf "$pkgdir"/etc/monocleOS/polybar.conf.skel
+	install -Dm755 polybar.sh "$pkgdir"/usr/bin/polybar.sh
+	install -Dm644 bash_profile "$pkgdir"/etc/monocleOS/bash_profile.skel
+	install -Dm755 xinitrc "$pkgdir"/etc/monocleOS/xinitrc.skel
+	install -Dm644 icons.default "$pkgdir"/etc/monocleOS/icons.default
+	install -Dm644 gtkSettings.ini "$pkgdir"/etc/monocleOS/gtkSettings.ini
+	install -Dm644 gtkrc "$pkgdir"/etc/monocleOS/gtkrc
+	install -Dm644 Trolltech.conf "$pkgdir"/etc/monocleOS/Trolltech.conf
+	install -Dm644 pam_environment "$pkgdir"/etc/monocleOS/pam_environment.skel
+	install -Dm644 automatic-update.service "$pkgdir"/usr/lib/systemd/system/automatic-update.service
+	install -Dm644 automatic-update.timer "$pkgdir"/usr/lib/systemd/system/automatic-update.timer
+	install -Dm644 clamav-scan.service "$pkgdir"/usr/lib/systemd/system/clamav-scan.service
+	install -Dm644 clamav-scan.timer "$pkgdir"/usr/lib/systemd/system/clamav-scan.timer
+	install -Dm644 grub "$pkgdir"/etc/default/grub.monocleOS
+	install -Dm644 autologin.conf "$pkgdir"/etc/systemd/system/getty@tty1.service.d/override.conf
+	install -Dm644 grubUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/grubUpgrade.hook
+	install -Dm644 mirrorUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/mirrorUpgrade.hook
+	install -Dm644 themeUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/themeUpgrade.hook
+	install -Dm644 nvidia.hook "$pkgdir"/etc/pacman.d/hooks/nvidia.hook.disabled
+	install -Dm644 40-libinput.conf "$pkgdir"/etc/X11/xorg.conf.d/40-libinput.conf
+	install -Dm644 50-lockdown.conf "$pkgdir"/etc/X11/xorg.conf.d/50-lockdown.conf
+	install -Dm644 nsswitch.conf "$pkgdir"/etc/monocleOS/nsswitch.conf
+	#install -Dm644 os-release "$pkgdir"/etc/os-release
+	#install -Dm755 ./xlunch/xlunch "$pkgdir"/usr/bin/xlunch
+	install -Dm755 xlunch_precompiled "$pkgdir"/usr/bin/xlunch
+	install -Dm755 xlunch_menu_precompiled "$pkgdir"/usr/bin/xlunch_menu
+	install -Dm644 entries.dsv.skel "$pkgdir"/etc/xlunch/entries.dsv.skel
+	install -Dm755 monocleOS "$pkgdir"/usr/bin/monocleOS
+	install -Dm755 initMonocle "$pkgdir"/usr/bin/initMonocle
+	install -Dm755 monocleOS-recovery "$pkgdir"/usr/bin/monocleOS-recovery
+	install -Dm755 update "$pkgdir"/usr/bin/update
+	install -Dm755 toggleTouchpad.sh "$pkgdir"/usr/bin/toggleTouchpad.sh
+	install -Dm644 onboard.theme "$pkgdir"/usr/share/onboard/themes/monocleOS.theme
+}

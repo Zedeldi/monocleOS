@@ -1,0 +1,10 @@
+[Unit]
+Description=Automatic Updates - 5 minutes after boot then every day
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1day
+Unit=automatic-update.service
+
+[Install]
+WantedBy=multi-user.target

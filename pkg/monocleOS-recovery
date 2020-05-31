@@ -1,0 +1,155 @@
+#!/bin/bash
+
+# monocleOS-recovery
+# Copyright (C) 2020  Zack Didcott
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+source /etc/monocleOS.env
+luksKey="/tmp/luksKey"
+
+## Factory Reset Functions
+
+function funcResetFormat {
+	## User
+	if [[ $1 = 1 ]]; then find /home/user -type f -print0 | xargs -0 shred -zu; fi # Other methods of secure deletion: chattr +s (potentially insecure), srm (most secure), wipe (only magnetic storage), and dd (very slow, for blocks)
+	rm -rf /home/user/* /home/user/.*
+	## System
+	systemctl stop org.cups.cupsd
+	rm -rf /etc/cups /var/log /var/spool
+	$installer -S --noconfirm cups
+	systemctl stop NetworkManager
+	shred -zu /etc/NetworkManager/system-connections/* # shred in case of saved private network connection data
+	hostname="monocleOS-$(cat /dev/urandom | tr -dc '0-9A-Z' | fold -w 4 | head -n 1)"
+	echo "$hostname" > /etc/hostname
+	echo "127.0.0.1	localhost" > /etc/hosts
+	echo "::1	localhost" >> /etc/hosts
+	echo "127.0.1.1	$hostname.localdomain	$hostname" >> /etc/hosts
+}
+
+function funcResetDefaults {
+	## Config
+	battery=`ls -1 /sys/class/power_supply/ | grep -i 'BAT'`
+	backlight=`ls -1 /sys/class/backlight/ | head -n 1`
+	sed -i 's/BACKLIGHT_PLACEHOLDER/'$backlight'/g' /etc/monocleOS/polybar.conf.skel
+	sed -i 's/BATTERY_PLACEHOLDER/'$battery'/g' /etc/monocleOS/polybar.conf.skel
+	## System Files
+	plymouth-set-default-theme monocleOS
+	cp /usr/share/themes/Arc/gtk-2.0/gtkrc.bk /usr/share/themes/Arc/gtk-2.0/gtkrc
+	cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk /usr/share/themes/Arc/gtk-3.0/gtk.gresource
+	cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc
+	cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource
+	## User Files
+	mkdir /home/user/Desktop; mkdir /home/user/Documents; mkdir /home/user/Downloads; mkdir /home/user/Pictures; mkdir /home/user/Pictures/Screenshots
+	cp /etc/monocleOS/bash_profile.skel /home/user/.bash_profile
+	cp /usr/share/backgrounds/white_circle.png /home/user/.wallpaper.png
+	cp /etc/monocleOS/xinitrc.skel /home/user/.xinitrc
+	mkdir -p /home/user/.config/dunst
+	cp /etc/monocleOS/dunstrc.skel /home/user/.config/dunst/dunstrc
+	mkdir -p /home/user/.config/i3
+	cp /etc/monocleOS/i3.conf.skel /home/user/.config/i3/config
+	mkdir -p /home/user/.config/polybar
+	cp /etc/monocleOS/polybar.conf.skel /home/user/.config/polybar/config
+	mkdir -p /home/user/.icons/default
+	cp /etc/monocleOS/icons.default /home/user/.icons/default/index.theme 
+	mkdir -p /home/user/.config/gtk-3.0
+	cp /etc/monocleOS/gtkSettings.ini /home/user/.config/gtk-3.0/settings.ini
+	cp /etc/monocleOS/gtkrc /home/user/.gtkrc-2.0
+	cp /etc/monocleOS/Trolltech.conf /home/user/.config/Trolltech.conf
+	cp /etc/monocleOS/pam_environment.skel /home/user/.pam_environment
+	mkdir -p /home/user/.config/monocleOS
+	cp /usr/share/themes/Arc/gtk-2.0/gtkrc.bk /home/user/.config/monocleOS/arc_gtk2_gtkrc
+	cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk /home/user/.config/monocleOS/arc_gtk3_gtk_gresource
+	cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk /home/user/.config/monocleOS/arc_dark_gtk2_gtkrc
+	cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk /home/user/.config/monocleOS/arc_dark_gtk3_gtk_gresource
+	cp /etc/monocleOS/launcher.conf /home/user/.config/monocleOS/launcher.conf
+	cp /etc/monocleOS/tips-service.conf /home/user/.config/monocleOS/tips-service.conf
+	touch /home/user/.hushlogin
+	touch /home/user/.firstBoot
+	chown -R user:user /home/user # Set ownership of /home/user
+}
+
+function funcResetPassword {
+	dd if=/dev/urandom of=$luksKey bs=512 count=4
+	cp $luksKey /priv/defaultKey.bin
+	chmod -R 000 /priv
+	cryptsetup luksKillSlot -q /dev/disk/by-uuid/$luksUUID 1 --key-file=/tmp/luksKey.tmp # Disable recovery key, using temporary intermediate key created from caller
+	cryptsetup luksChangeKey -q /dev/disk/by-uuid/$luksUUID --key-slot 0 --key-file=/tmp/luksKey.tmp $luksKey # Change (what was) user password to random keyfile
+	echo "monocleOS	UUID=$luksUUID	/priv/defaultKey.bin	luks" > /etc/crypttab.initramfs
+	echo MODULES=\($kmodules\) | tee /etc/mkinitcpio.conf > /dev/null
+	echo FILES=\(/priv/defaultKey.bin\) | tee -a /etc/mkinitcpio.conf > /dev/null
+	echo HOOKS=\(base systemd sd-plymouth keyboard autodetect sd-vconsole modconf block sd-encrypt sd-lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null
+	mkinitcpio -P
+	newPW="`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`"
+	echo "user:$newPW" | chpasswd 
+	passwd -l monocle
+	passwd -l recovery
+	passwd -l root
+}
+
+function funcResetPermissions {
+	echo "user ALL=(root)NOPASSWD:/usr/bin/initMonocle" >> /etc/sudoers.d/monocleOS; visudo -cf /etc/sudoers.d/monocleOS || rm /etc/sudoers.d/monocleOS
+}
+
+## Reinstall Functions
+
+function funcInstallBase {
+	packages=`cat ~/packages.txt`
+	$installer -S --force --noconfirm $packages
+}
+
+function funcInstallExtract {
+	rm -rf ~/monocleOS_build; mkdir ~/monocleOS_build
+	cd ~/monocleOS_build; tar -xzf ~/monocleOS.tar.gz
+}
+
+function funcInstallMonocle {
+	cd ~/monocleOS_build; makepkg -si --force --noconfirm
+}
+
+## Update Functions
+
+function funcUpdateCopy {
+	cp $1 ~/
+}
+
+case "$1" in
+	--resetFormat)
+		funcResetFormat $2
+		;;
+	--resetDefaults)
+		funcResetDefaults
+		;;
+	--resetPassword)
+		funcResetPassword
+		;;
+	--resetPermissions)
+		funcResetPermissions
+		;;
+	--installBase)
+		funcInstallBase
+		;;
+	--installExtract)
+		funcInstallExtract
+		;;
+	--installMonocle)
+		funcInstallMonocle
+		;;
+	--updateCopy)
+		funcUpdateCopy $2
+		;;
+	*)
+		echo $"Usage: $0 reset{Format [overwrite]|Defaults|Permissions|Password}|install{Base|Extract|Monocle}|update{Copy [filename]}"
+		exit 1
+esac

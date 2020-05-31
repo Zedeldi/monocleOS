@@ -1,0 +1,10 @@
+[Unit]
+Description=Automatic scanning of downloads every hour
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1hour
+Unit=clamav-scan.service
+
+[Install]
+WantedBy=multi-user.target

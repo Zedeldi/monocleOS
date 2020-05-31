@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Media Player
+Comment=Watch a video
+Exec=/usr/bin/application-wrapper media_player
+Icon=/usr/share/xlunch/icons/numix/vlc.png
+Terminal=false

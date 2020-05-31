@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=monocleOS_purple
+Description=Purple monocleOS boot animation for Plymouth based on Numix.
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/monocleOS_purple
+ScriptFile=/usr/share/plymouth/themes/monocleOS_purple/monocleOS_purple.script

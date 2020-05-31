@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Web
+Comment=Browse the Internet
+Exec=/usr/bin/application-wrapper web
+Icon=/usr/share/xlunch/icons/numix/web-browser.png
+Terminal=false

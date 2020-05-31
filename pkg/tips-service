@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# tips-service
+# Copyright (C) 2020  Zack Didcott
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+appName="Hints & Tips"
+timeout=15000
+urgency="normal"
+
+
+if [[ ! -f /home/$USER/.config/monocleOS/tips-service.conf ]]; then
+	# Defaults
+	periodicTips=1
+	periodicTipsFreq=120
+	applicationTips=1
+else
+	# User Preferences
+	source /home/$USER/.config/monocleOS/tips-service.conf
+fi
+
+## Daemon
+function funcDaemon {
+	# Random UI Tips
+	while [[ $periodicTips = 1 ]]; do
+		# Array must be defined in while loop for dynamic content
+		tipsArray=("You can turn off these helpful tips by opening Settings, then selecting Hints & Tips." "If a program is misbehaving, you can force close it by right clicking on the cross in the top-right." "By clicking on the window icons at the top-right of your screen, you can change the layout of windows." "Did you know that you can launch the on-screen magnifier by clicking on the magnifier icon." "Get Creative. Personalise your PC by opening Settings and selecting Themes & Personalisation." "It's not you; it's me. If some things are difficult to read, you can change the system font size in Settings, then Themes & Personalisation." "Not your favourite colour? Change your system's appearance in Settings  Themes & Personalisation" "Speakers too quiet? You can change the volume by scrolling on the speaker icon on the top bar - click to mute. More advanced sound settings are found in the Settings application." "Want to start up where you left off? Try putting your PC to sleep instead of powering off by clicking the Sleep icon." "Just a head's up, your PC $(/usr/bin/monocleOS --freeSpaceCheck Home)" "monocleOS is compatible with most external peripheral devices, such as mice, keyboards and cameras." "Make sure to create a recovery key, in case you forget your password. Add a recovery key in Settings  Advanced  Recovery, then Add a Recovery Key." "monocleOS cannot protect you from all evil masterminds. Be careful who you give personal data to; if something looks fishy, stay away from it." "Rarely use a certain application? Go to Settings, then select Add/Remove Programs." "To change your background image, go to Settings  Themes & Personalisation, then select Change your Wallpaper.")
+		sleep ${periodicTipsFreq}m
+		notification="${tipsArray[$RANDOM % ${#tipsArray[@]}]}" ## Set notification to random element in array
+		notify-send -u $urgency -t $timeout -a "$appName" "$notification"
+	done
+}
+
+## Application Tips
+function funcApp {
+	if [[ $applicationTips = 1 ]]; then
+		declare -A appTipsArray=(["lock"]="To unlock your PC, type your password and press Enter." ["office"]="In Office, you can write a letter, create a spreadsheet, or even express your artistic side with Draw." ["magnifier"]="To use the screen magnifier, move the cursor over the magnifier then hold the left mouse button while moving your mouse around the screen. To close the magnifier, click on its window and exit as normal." ["settings"]="Select an option, then click OK - or press Enter. Your choice." ["web"]="Simply type in your search query, then press Enter.")
+		app="${1,,}"
+		match=0
+		for arrayApp in "${!appTipsArray[@]}"; do # Compare given argument with keys of appTipsArray
+			if [[ $arrayApp = "$app" ]]; then
+				match=1
+				break
+			fi
+		done
+		if [[ $match = 0 ]]; then
+			echo "Invalid application identifier."
+			exit 1
+		elif [[ $match = 1 ]]; then
+			notify-send -u $urgency -t $timeout -a "$appName" "${appTipsArray[$app]}"
+		fi
+	fi
+	exit
+}
+
+case "$1" in
+	--daemon)
+		funcDaemon
+		;;
+	--app)
+		funcApp $2
+		;;
+	*)
+		echo $"Usage: $0 --daemon | --app [application identifier]."
+		exit 1
+esac
