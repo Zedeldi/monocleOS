@@ -21,17 +21,17 @@
 keyring=1
 # Partitioning
 if [ -z "$1" ]; then
-	installDisk="/dev/sdX" ## THIS DRIVE WILL BE WIPED
+	installDisk="/dev/sdX" # THIS DRIVE WILL BE WIPED
 else
 	installDisk="$1"
 fi
-[ -d /sys/firmware/efi ] && bootloader="efi" || bootloader="mbr" ## Must be 'efi' or 'mbr'
-bootloaderArch="x86_64" ## For EFI. Normally this, but in some cases 64-bit CPUs have a 32-bit UEFI (i.e. ASUS T100TA) - note this may not be supported on grub-silent
-secureBoot=0 ## For EFI. Currently uses PreLoader with MS Windows' Keys - GRUB must be enrolled on first boot when enabled
-if [[ $bootloader == "efi" ]]; then diskType="gpt"; elif [[ $bootloader == "mbr" ]]; then diskType="msdos"; fi ## Only 'gpt' and 'msdos' are supported
+[ -d /sys/firmware/efi ] && bootloader="efi" || bootloader="mbr" # Must be 'efi' or 'mbr'
+bootloaderArch="x86_64" # For EFI. Normally this, but in some cases 64-bit CPUs have a 32-bit UEFI (i.e. ASUS T100TA) - note this may not be supported on grub-silent
+secureBoot=0 # For EFI. Currently uses PreLoader with MS Windows' Keys - GRUB must be enrolled on first boot when enabled
+if [[ $bootloader == "efi" ]]; then diskType="gpt"; elif [[ $bootloader == "mbr" ]]; then diskType="msdos"; fi # Only 'gpt' and 'msdos' are supported
 diskSize="`fdisk -l | grep "Disk $installDisk" | awk '{print $3}'`"
-diskSizeUnit="`fdisk -l | grep "Disk $installDisk" | awk '{print $4}' | cut -c 1`" ## Find Unit of fdisk. Assumes GiB or TiB
-if [[ $diskSizeUnit == 'T' ]]; then diskSize=$(( $diskSize * 1024 )); fi ## Convert to GiB if TiB
+diskSizeUnit="`fdisk -l | grep "Disk $installDisk" | awk '{print $4}' | cut -c 1`" # Find Unit of fdisk. Assumes GiB or TiB
+if [[ $diskSizeUnit == 'T' ]]; then diskSize=$(( $diskSize * 1024 )); fi # Convert to GiB if TiB
 # LUKS
 luksMap="Root"
 luksKey="/tmp/luksKey"

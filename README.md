@@ -1,8 +1,7 @@
-<center>
+<p align="center">
+  <img src="../assets/logo.png?raw=true" alt="Logo"/>
+</p>
 
-![Logo](../assets/logo.png?raw=true)
-
-</center>
 
 # monocleOS
 
@@ -14,19 +13,19 @@ A simplistic, easy-to-use operating system, based on Arch Linux.
 2. [Features](#features)
 3. [Design](#design)
 4. [Installation](#installation)
-  1. [TL;DR](#tldr)
+    1. [TL;DR](#tldr)
 5. [Technical Specifications](#technical-specifications)
-  1. [Partitioning](#partitioning)
-  2. [Users](#users)
-  3. [Desktop](#desktop)
-  4. [Bootloader](#bootloader)
-  5. [Services](#services)
-  6. [Recovery](#recovery)
+    1. [Partitioning](#partitioning)
+    2. [Users](#users)
+    3. [Desktop](#desktop)
+    4. [Bootloader](#bootloader)
+    5. [Services](#services)
+    6. [Recovery](#recovery)
 6. [Other Quirks](#other-quirks)
 7. [Limitations](#limitations)
-  1. [Security Considerations](#security-considerations)
-  2. [Known Bugs](#known-bugs)
-  3. [Reporting Bugs](#reporting-bugs)
+    1. [Security Considerations](#security-considerations)
+    2. [Known Bugs](#known-bugs)
+    3. [Reporting Bugs](#reporting-bugs)
 8. [Todo](#todo)
 9. [License](#license)
 10. [Credits](#credits)
@@ -41,7 +40,7 @@ This project was made specifically with the elderly in mind, but anyone is welco
 ## Features
 
 - Clean & minimal, theme-able UI
-- Preinstalled applications, such as [Firefox](https://www.mozilla.org/en-US/firefox/new/), [LibreOffice](https://www.libreoffice.org/) and [VLC](https://www.videolan.org/vlc/) - no bloatware whatsoever
+- Preinstalled applications, such as [Epiphany](https://wiki.gnome.org/Apps/Web/), [LibreOffice](https://www.libreoffice.org/) and [VLC](https://www.videolan.org/vlc/) - no bloatware whatsoever
 - Automatic, unobtrusive updates
 - LUKS encryption by design
 - Built entirely upon trusted open-source software
@@ -76,18 +75,21 @@ You will need to be able to access the installer's files from somewhere within t
 
 Currently, the installer expects the monocleOS package to be found at monocleOS.tar.gz. This is copied to /var/monocle/monocleOS/, extracted, then built & installed with makepkg. To meet this requirement, add the contents of the pkg directory to the specified tar.gz archive, in the location referenced by the installer script. Note: if you want to use an already built package, just remove the `tar -xzvf` line, and change `makepkg -si` to be `pacman -U /path/to/package`.
 
-Precompiled packages can be dumped in the specified folder (by default, 'Precompiled_Packages'), and they will be installed alongside everything else. This could serve as a method of making drop-in changes to the system during installation. It reduces install time, by eliminating the need for compilation of AUR packages. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time.
+Various changes can be applied at this stage, by modifying the files within the package directory, before creating the archive - e.g. changing initial setup, adding i3 shortcuts, backgrounds, etc.
 
-You can invoke the installer with `INSTALL.sh /dev/SDX`, or by changing the installDisk variable in monocleOS_Installer.sh and running that directly. All data on /dev/SDX will be very quickly wiped. Make sure you have checked and double checked the drive letter.
+Precompiled packages can be dumped in the specified folder (by default, 'Precompiled_Packages'), and they will be installed alongside everything else. It reduces install time, by eliminating the need for compilation of AUR packages. This could also serve as a method of making drop-in changes to the system during installation. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time.
+
+You can invoke the installer with `INSTALL.sh /dev/SDX`, or by changing the installDisk variable in monocleOS\_Installer.sh and running that directly. All data on /dev/SDX will be very quickly wiped. Make sure you have checked and double checked the drive letter. The installer will check that there is enough space on the disk. If this is undesired, especially if you're using a virtual dynamic disk, remove the free space check lines in monocleOS\_Installer.sh, and specify the partition sizes explicitly, with their suffix (e.g. rootSize=25G).
 
 If there are any changes you would like to make to the system, do it before rebooting. You will need to unlock the LUKS partition with the generated keyfile (by default found at /tmp/luksKey), and mount the required partitions. There is no way of getting unrestricted root access while booted into monocleOS, or at least that's the plan... If this is undesired, set a password for root and enable TTY switching (see [below](#other-quirks)), or modify sudoers to allow user elevated privileges.
 
 ### TL;DR
 
-1. Boot Arch installation media
-2. `git clone https://github.com/Zedeldi/monocleOS.git`
-3. `cd monocleOS/pkg; tar -czvf ../monocleOS.tar.gz *`
-4. `cd ../; ./INSTALL.sh /dev/sdX`
+1. Download & boot [Arch installation media](https://www.archlinux.org/download/)
+2. Install git: `pacman -Sy git`
+3. Clone this repo: `git clone https://github.com/Zedeldi/monocleOS.git /tmp/monocleOS`
+4. Create package archive: `cd /tmp/monocleOS/pkg; tar -czvf ../monocleOS.tar.gz *`
+5. Start installation: `cd ../; ./INSTALL.sh /dev/sdX`, where /dev/sdX is the block device to install monocleOS
 
 ## Technical Specifications
 
@@ -228,6 +230,10 @@ Linux = <https://www.kernel.org/>, <https://www.linuxfoundation.org/>
 
 GNOME Project = <https://www.gnome.org/>
 
+LibreOffice = <https://www.libreoffice.org/>
+
+VLC = <https://www.videolan.org/vlc/>
+
 Launcher = <https://github.com/Tomas-M/xlunch>
 
 WM = <https://i3wm.org/>, <https://github.com/i3/i3>, (i3-gaps fork: <https://github.com/Airblader/i3>)
@@ -239,6 +245,7 @@ Notifications = <https://dunst-project.org/>, <https://github.com/dunst-project/
 Boot animation = <https://www.freedesktop.org/wiki/Software/Plymouth/>, <https://gitlab.freedesktop.org/plymouth/plymouth>
 
 Theme:
+- Wallpapers = <https://github.com/GNOME/gnome-backgrounds>
 - GTK = <https://github.com/arc-design/arc-theme>
 - Icons = <https://github.com/numixproject/numix-icon-theme-circle>
 - Plymouth = <https://github.com/numixproject/numix-plymouth-theme>
@@ -249,8 +256,8 @@ Please see packages.txt or the 'packages' variable within the installer for a co
 
 If you found monocleOS useful, and would like to make a donation, you're an awesome person. Please consider donating to the [above projects](#credits) first, as without them, monocleOS would not be possble. Donations to [Cancer Research UK](https://www.cancerresearchuk.org/) would be greatly treasured personally, as this charity holds a special place in my heart. Thank you!
 
-My bitcoin address is: bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536
+My bitcoin address is: [bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536](bitcoin://bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536)
 
-[![Bitcoin](../assets/bitcoin.png?raw=true)](bitcoin:bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536)
+[![Bitcoin](../assets/bitcoin.png?raw=true)](bitcoin://bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536)
 
 “We make a living by what we get. We make a life by what we give.” ― Winston Churchill
