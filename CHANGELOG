@@ -1,3 +1,10 @@
+[200531]
+
+Added fuse2 to packages, as grub-silent requires it to compile
+Added p7zip to support most archive formats
+Removed redundant packages.txt
+
+
 [200530]
 
 Added LICENSE (GPL v3)

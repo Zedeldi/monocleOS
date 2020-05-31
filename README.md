@@ -77,7 +77,7 @@ Currently, the installer expects the monocleOS package to be found at monocleOS.
 
 Various changes can be applied at this stage, by modifying the files within the package directory, before creating the archive - e.g. changing initial setup, adding i3 shortcuts, backgrounds, etc.
 
-Precompiled packages can be dumped in the specified folder (by default, 'Precompiled_Packages'), and they will be installed alongside everything else. It reduces install time, by eliminating the need for compilation of AUR packages. This could also serve as a method of making drop-in changes to the system during installation. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time.
+Precompiled packages can be dumped in the specified folder (by default, 'Precompiled\_Packages'), and they will be installed alongside everything else. It reduces install time, by eliminating the need for compilation of AUR packages. This could also serve as a method of making drop-in changes to the system during installation. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time. Add any additional repo/AUR packages to the 'packages' variable in monocleOS\_Installer.sh
 
 You can invoke the installer with `INSTALL.sh /dev/SDX`, or by changing the installDisk variable in monocleOS\_Installer.sh and running that directly. All data on /dev/SDX will be very quickly wiped. Make sure you have checked and double checked the drive letter. The installer will check that there is enough space on the disk. If this is undesired, especially if you're using a virtual dynamic disk, remove the free space check lines in monocleOS\_Installer.sh, and specify the partition sizes explicitly, with their suffix (e.g. rootSize=25G).
 
@@ -129,7 +129,7 @@ See [credits](#credits).
 
 ### Bootloader
 
-Currently, monocleOS uses grub-silent, in order to supress various messages that GRUB produces. Secure boot is supported through preloader-signed for EFI systems. Note: grub-silent only supports x86_64 for EFI, though this is the most common anyways.
+Currently, monocleOS uses grub-silent, in order to supress various messages that GRUB produces. Secure boot is supported through preloader-signed for EFI systems, though GRUB must be enrolled on the first boot. In the case of a 32-bit UEFI system, grub-silent will need to be compiled accordingly by setting the architecture within its PKGBUILD.
 
 ### Services
 
@@ -173,6 +173,8 @@ If the LUKS password is known, one can gain access to the install by booting up 
 TTY switching with Ctrl+Alt+{1-6} is locked from Xorg, to prevent unwanted, unexpected TTY switching. This can be disabled by removing /etc/X11/xorg.conf.d/50-lockdown.conf.
 
 The root account is locked; you will need to create a password from an external boot device (see [chroot](#chroot)) or during [installation](#installation).
+
+Wine is installed by default, and can be used from Settings > Advanced. This is very dependency heavy, however, due to the required 32-bit libraries. If you are unlikely to need this, it may be worth removing this functionality.
 
 ## Limitations
 
@@ -250,7 +252,7 @@ Theme:
 - Icons = <https://github.com/numixproject/numix-icon-theme-circle>
 - Plymouth = <https://github.com/numixproject/numix-plymouth-theme>
 
-Please see packages.txt or the 'packages' variable within the installer for a complete list.
+Please see the 'packages' variable in monocleOS_Installer.sh or '/var/recovery/packages.txt' for a complete list.
 
 ## Donate
 

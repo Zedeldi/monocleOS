@@ -26,7 +26,7 @@ else
 	installDisk="$1"
 fi
 [ -d /sys/firmware/efi ] && bootloader="efi" || bootloader="mbr" # Must be 'efi' or 'mbr'
-bootloaderArch="x86_64" # For EFI. Normally this, but in some cases 64-bit CPUs have a 32-bit UEFI (i.e. ASUS T100TA) - note this may not be supported on grub-silent
+bootloaderArch="x86_64" # For EFI. Normally x86_64, but in some cases 64-bit CPUs have a 32-bit UEFI (i.e. ASUS T100TA) - in this case, grub-silent will need to be compiled accordingly
 secureBoot=0 # For EFI. Currently uses PreLoader with MS Windows' Keys - GRUB must be enrolled on first boot when enabled
 if [[ $bootloader == "efi" ]]; then diskType="gpt"; elif [[ $bootloader == "mbr" ]]; then diskType="msdos"; fi # Only 'gpt' and 'msdos' are supported
 diskSize="`fdisk -l | grep "Disk $installDisk" | awk '{print $3}'`"
@@ -57,7 +57,7 @@ rootMount="/mnt"
 
 # Packages
 pkgfile='packages.txt'
-packages="aisleriot alsa-utils apparmor arc-gtk-theme arc-icon-theme arch-install-scripts avahi awesome-terminal-fonts base base-devel clamav clamtk cups dunst epiphany evolution feh ffmpegthumbnailer file-roller foomatic-db foomatic-db-engine foomatic-db-gutenprint-ppds foomatic-db-nonfree-ppds foomatic-db-ppds four-in-a-row gedit ghostscript git gnome-calculator gnome-calendar gnome-chess gnome-keyring gnome-mahjongg gnome-mines gnome-screensaver gnome-screenshot gnome-sudoku gnome-system-monitor gnome-terminal gnuchess gpicview grub-silent gsfonts gtk-engine-murrine gutenprint gvfs-mtp hunspell hunspell-en_GB i3-gaps iagno kernel-modules-hook libreoffice-fresh libsecret linux linux-firmware mkinitcpio networkmanager nm-connection-editor noto-fonts noto-fonts-cjk noto-fonts-emoji nss-mdns mousetweaks ntp onboard pavucontrol picom preload playerctl plymouth polybar pulseaudio pulseaudio-alsa quadrapassel reflector sudo system-config-printer thunar thunar-archive-plugin thunar-media-tags-plugin thunar-sendto-clamtk thunar-volman ttf-dejavu ttf-font-awesome ttf-liberation ttf-material-icons-git tumbler vlc wine winetricks xcursor-breeze xorg xorg-drivers xorg-xinit xss-lock xzoom yay zenity"
+packages="aisleriot alsa-utils apparmor arc-gtk-theme arc-icon-theme arch-install-scripts avahi awesome-terminal-fonts base base-devel clamav clamtk cups dunst epiphany evolution feh ffmpegthumbnailer file-roller foomatic-db foomatic-db-engine foomatic-db-gutenprint-ppds foomatic-db-nonfree-ppds foomatic-db-ppds four-in-a-row fuse2 gedit ghostscript git gnome-calculator gnome-calendar gnome-chess gnome-keyring gnome-mahjongg gnome-mines gnome-screensaver gnome-screenshot gnome-sudoku gnome-system-monitor gnome-terminal gnuchess gpicview grub-silent gsfonts gtk-engine-murrine gutenprint gvfs-mtp hunspell hunspell-en_GB i3-gaps iagno kernel-modules-hook libreoffice-fresh libsecret linux linux-firmware mkinitcpio networkmanager nm-connection-editor noto-fonts noto-fonts-cjk noto-fonts-emoji nss-mdns mousetweaks ntp onboard p7zip pavucontrol picom preload playerctl plymouth polybar pulseaudio pulseaudio-alsa quadrapassel reflector sudo system-config-printer thunar thunar-archive-plugin thunar-media-tags-plugin thunar-sendto-clamtk thunar-volman ttf-dejavu ttf-font-awesome ttf-liberation ttf-material-icons-git tumbler vlc wine winetricks xcursor-breeze xorg xorg-drivers xorg-xinit xss-lock xzoom yay zenity"
 if [[ $bootloader == "efi" ]]; then packages="$packages efibootmgr"; fi
 if [[ $secureBoot == 1 ]]; then packages="$packages preloader-signed"; fi
 # Kernel & Drivers
