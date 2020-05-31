@@ -113,13 +113,13 @@ startTime=$SECONDS
 
 ## Preliminary Checks
 if [[ $EUID -ne 0 ]]; then
-	echo "This script must be run as root"
+	echo "This script must be run as root."
 	exit 1
 fi
 if [ -n "$installDisk" ]; then
 	if (( ( $(($swapSize / 1048576)) + $rootSize + 5) > $diskSize )); then
-		echo "Sum of partition sizes are greater than size of disk... aborting"
-		exit
+		echo "Sum of partition sizes are greater than size of disk. Aborting..."
+		exit 1
 	else
 		rootSize=$rootSize'G'
 		swapSize=$swapSize'K'
@@ -137,8 +137,8 @@ if [ -n "$installDisk" ]; then
 		bootPath=$installDisk"1"
 		luksPath=$installDisk"2"
 	else
-		echo "'bootloader' must be 'efi' or 'mbr'"
-		exit
+		echo "'bootloader' must be 'efi' or 'mbr'."
+		exit 1
 	fi
 fi
 
@@ -204,7 +204,13 @@ fi
 # Mount
 cryptsetup open $luksPath $luksMap --key-file=$luksKey; lvmPath="/dev/mapper/$luksMap"
 sleep 5
-mount $rootPath $rootMount; rootPath=$rootMount
+mount $rootPath $rootMount
+if [ $? -eq 0 ]; then
+	rootPath=$rootMount
+else
+	echo "Root device failed to mount. Aborting..."
+	exit 1
+fi
 mkdir $rootMount/boot; mount $bootPath $rootMount/boot; bootPath="$rootMount/boot"
 if [[ $bootloader == "efi" ]]; then mkdir $bootPath/esp; mount $efiPath $bootPath/esp; efiPath="$bootPath/esp"; fi
 mkdir $rootMount/home; mount $homePath $rootMount/home; homePath="$rootMount/home"
