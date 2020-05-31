@@ -71,29 +71,45 @@ Conveniently, these package names are the same among most major GNU/Linux distri
 
 The latest Arch install image will suffice: <https://www.archlinux.org/download/>
 
-You will need to be able to access the installer's files from somewhere within the installation media, e.g. a live CD. These could be added to the image, mounted from an external drive, etc. If installing on a VM, the best option would be to create an ISO of the files and mount it as a disc. Alternatively, you could clone this repository once booted into the installation media, with `git clone https://github.com/Zedeldi/monocleOS.git`. Further, unless you have a local copy of the required packages, you will need a internet connection.
+You will need to be able to access the installer's files from somewhere within the installation media, e.g. a live CD. These could be added to the image, mounted from an external drive, etc. If installing on a VM, the best option would be to create an ISO of the files and mount it as a disc. Alternatively, you could clone this repository once booted into the installation media, with `git clone https://github.com/Zedeldi/monocleOS.git` or download a release. Unless you have a local copy of the required packages, you will need a internet connection.
 
 Currently, the installer expects the monocleOS package to be found at monocleOS.tar.gz. This is copied to /var/monocle/monocleOS/, extracted, then built & installed with makepkg. To meet this requirement, add the contents of the pkg directory to the specified tar.gz archive, in the location referenced by the installer script. Note: if you want to use an already built package, just remove the `tar -xzvf` line, and change `makepkg -si` to be `pacman -U /path/to/package`.
 
 Various changes can be applied at this stage, by modifying the files within the package directory, before creating the archive - e.g. changing initial setup, adding i3 shortcuts, backgrounds, etc.
 
-Precompiled packages can be dumped in the specified folder (by default, 'Precompiled\_Packages'), and they will be installed alongside everything else. It reduces install time, by eliminating the need for compilation of AUR packages. This could also serve as a method of making drop-in changes to the system during installation. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time. Add any additional repo/AUR packages to the 'packages' variable in monocleOS\_Installer.sh
+Precompiled packages can be dumped in the specified folder (by default, 'Precompiled\_Packages'), and they will be installed alongside everything else. It reduces install time, by eliminating the need for compilation of AUR packages. This could also serve as a method of making drop-in adjustments to the system during installation. Note: if a more recent version of a package is found, pacman/yay will install it, *increasing* installation time. Add any additional repo/AUR packages to the 'packages' variable in monocleOS\_Installer.sh
 
 You can invoke the installer with `INSTALL.sh /dev/SDX`, or by changing the installDisk variable in monocleOS\_Installer.sh and running that directly. All data on /dev/SDX will be very quickly wiped. Make sure you have checked and double checked the drive letter. The installer will check that there is enough space on the disk. If this is undesired, especially if you're using a virtual dynamic disk, remove the free space check lines in monocleOS\_Installer.sh, and specify the partition sizes explicitly, with their suffix (e.g. rootSize=25G).
 
-If there are any changes you would like to make to the system, do it before rebooting. You will need to unlock the LUKS partition with the generated keyfile (by default found at /tmp/luksKey), and mount the required partitions. There is no way of getting unrestricted root access while booted into monocleOS, or at least that's the plan... If this is undesired, set a password for root and enable TTY switching (see [below](#other-quirks)), or modify sudoers to allow user elevated privileges.
+If there are any final modifications you would like to make to the system, do it **before** rebooting. You will need to unlock the LUKS partition with the generated keyfile (by default found at /tmp/luksKey), and mount the required partitions. There is no way of getting unrestricted root access while booted into monocleOS, or at least that's the plan... If this is undesired, set a password for root and enable TTY switching (see [below](#other-quirks)), or modify sudoers to allow user elevated privileges.
 
 ### TL;DR
 
+Prerequisites:
+- Internet connection
+- Install disk > 12GiB
+- :coffee: + 45 minutes
+
 1. Download & boot [Arch installation media](https://www.archlinux.org/download/)
-2. Install git: `pacman -Sy git`
-3. Clone this repo: `git clone https://github.com/Zedeldi/monocleOS.git /tmp/monocleOS`
-4. Create package archive: `cd /tmp/monocleOS/pkg; tar -czvf ../monocleOS.tar.gz *`
-5. Start installation: `cd ../; ./INSTALL.sh /dev/sdX`, where /dev/sdX is the block device to install monocleOS
+2. Download monocleOS installer
+
+   Git:
+   - Install git: `pacman -Sy git`
+   - Clone this repo: `git clone https://github.com/Zedeldi/monocleOS.git /tmp/monocleOS`
+   - Create package archive: `cd /tmp/monocleOS/pkg; tar -czvf ../monocleOS.tar.gz *; cd ../`
+   
+   OR
+   
+   Release:
+   - Download release archive: `curl https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/monocleOS_Installer_{YYYY-MM-DD}.tar.gz --create-dirs -o /tmp/monocleOS/monocleOS_Installer_{YYYY-MM-DD}.tar.gz`
+   - Verify hashes: `cd /tmp/monocleOS; curl https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/sha256sum.txt | sha256sum --check`
+   - Extract archive: `tar -xzvf monocleOS_Installer_{YYYY-MM-DD}.tar.gz`
+   
+3. Start installation: `./INSTALL.sh /dev/sdX`, where /dev/sdX is the block device to install monocleOS
 
 ## Technical Specifications
 
-monocleOS is, in essence, a preconfigured rice setup of Arch, with a one-click installer. It may not suit the average power user, but should be useful for those who want something that 'just works'™.
+monocleOS is, in essence, a preconfigured rice setup of Arch, with a one-click installer. It may not suit the average power user, but should be helpful to those who use a PC for simple tasks - like online shopping or word processing.
 
 ### Partitioning
 
