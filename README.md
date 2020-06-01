@@ -180,6 +180,8 @@ Through elevated privileges, the user's password can then be changed, and furthe
 
 Additional options include a factory reset, and reinstallation of system packages. These can be done without the recovery key, although factory resetting requires the user's password instead.
 
+Factory reset does not affect changes made by root; additional packages, systemd services, global configuration files, etc. are considered manufacturer modifications. User data and other private information (i.e. network connections) is deleted however. /home/user/ is restored to default settings.
+
 #### Chroot
 
 If the LUKS password is known, one can gain access to the install by booting up an external OS and opening the LUKS partition using `cryptsetup open /dev/sdXY`. Then, after mounting /dev/monocleOS/System, you can chroot into it, change a password, and perform system maintenance.
@@ -219,9 +221,9 @@ If you find more ~~bad coding~~ mishaps, please let me know, and I'll try to fig
 ## Todo
 
 - Make a graphical installer, possibly using whiptail to minimise dependencies & size
-- ~~Add support for detecting devices and installing specific drivers, e.g. `if $(lspci | grep -iq 'nvidia'); then pacman -S nvidia; fi`~~
-  - ~~Add kernel modules, e.g. `MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)`, to mkinitcpio.conf for early KMS~~
-- Improve support for tablets and touchscreen devices, e.g. on-screen keyboard. See <https://wiki.archlinux.org/index.php/Tablet_PC>, <https://github.com/ssmolkin1/i3touchmenu> & <https://launchpad.net/onboard>
+- Include GNOME's `simple-scan` for basic scanner support
+- Improve support for tablets and touchscreen devices, e.g. on-screen keyboard
+  - See <https://wiki.archlinux.org/index.php/Tablet_PC>, <https://github.com/ssmolkin1/i3touchmenu> & <https://launchpad.net/onboard>
 - AppArmor profiles
 
 ## License
