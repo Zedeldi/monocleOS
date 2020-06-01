@@ -101,8 +101,8 @@ Prerequisites:
    OR
    
    Release:
-   - Download release archive: `curl https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/monocleOS_Installer_{YYYY-MM-DD}.tar.gz --create-dirs -o /tmp/monocleOS/monocleOS_Installer_{YYYY-MM-DD}.tar.gz`
-   - Verify hashes: `cd /tmp/monocleOS; curl https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/sha256sum.txt | sha256sum --check`
+   - Download release archive: `curl -L https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/monocleOS_Installer_{YYYY-MM-DD}.tar.gz --create-dirs -o /tmp/monocleOS/monocleOS_Installer_{YYYY-MM-DD}.tar.gz`
+   - Verify hashes: `cd /tmp/monocleOS; curl -L https://github.com/Zedeldi/monocleOS/releases/download/{VERSION}/sha256sum.txt | sha256sum --check`
    - Extract archive: `tar -xzvf monocleOS_Installer_{YYYY-MM-DD}.tar.gz`
    
 3. Start installation: `./INSTALL.sh /dev/sdX`, where /dev/sdX is the block device to install monocleOS
