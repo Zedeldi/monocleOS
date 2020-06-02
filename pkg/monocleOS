@@ -731,11 +731,8 @@ function funcSettingsTips {
 			enable=`zenity --title="Application Hints & Tips" --list --radiolist --column="Select" --column="Status" TRUE Enable FALSE Disable`
 			if [[ $enable = "Enable" ]]; then
 				sed -i '/'applicationTips='/s/.*/'applicationTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
-				pkill tips-service
-				nohup /usr/bin/tips-service --daemon &
 			elif [[ $enable = "Disable" ]]; then
 				sed -i '/'applicationTips='/s/.*/'applicationTips=0'/' /home/$USER/.config/monocleOS/tips-service.conf
-				pkill tips-service
 			fi
 		fi
 	done
