@@ -222,6 +222,8 @@ If you find more ~~bad coding~~ mishaps, please let me know, and I'll try to fig
 
 - Make a graphical installer, possibly using whiptail to minimise dependencies & size
 - Include GNOME's `simple-scan` for basic scanner support
+- Replace VLC with GNOME's `totem`
+  - This is simpler, and eliminates the need for Qt dependencies, though lacks in some functionality
 - Improve support for tablets and touchscreen devices, e.g. on-screen keyboard
   - See <https://wiki.archlinux.org/index.php/Tablet_PC>, <https://github.com/ssmolkin1/i3touchmenu> & <https://launchpad.net/onboard>
 - AppArmor profiles

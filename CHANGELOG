@@ -1,3 +1,9 @@
+[200604]
+
+Added qt5-styleplugins, requried for GTK-style theming for Qt since qt5-base 5.7.0
+Bug fixes
+
+
 [200531]
 
 Added fuse2 to packages, as grub-silent requires it to compile
