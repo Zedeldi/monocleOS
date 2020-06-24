@@ -5,6 +5,8 @@
 
 # monocleOS
 
+[![GitHub release](https://img.shields.io/github/v/release/Zedeldi/monocleOS?include_prereleases&style=flat-square&color=0088cc)](https://github.com/Zedeldi/monocleOS/releases) [![GitHub license](https://img.shields.io/github/license/Zedeldi/monocleOS?style=flat-square&color=orange)](https://github.com/Zedeldi/monocleOS/blob/master/LICENSE) [![Powered by Arch](https://img.shields.io/badge/powered%20by-arch-blue?style=flat-square&logo=arch%20linux&color=0088cc)](https://www.archlinux.org) [![Built with love](https://img.shields.io/badge/built%20with-%E2%99%A5-orange.svg?style=flat-square)](https://github.com/Zedeldi/monocleOS)
+
 A simplistic, easy-to-use operating system, based on Arch Linux.
 
 ## Contents
