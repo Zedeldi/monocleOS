@@ -116,6 +116,10 @@ if [[ $EUID -ne 0 ]]; then
 	echo "This script must be run as root."
 	exit 1
 fi
+if [ ! -e $pkgtar ]; then
+	echo "$pkgtar does not exist."
+	exit 1
+fi
 if [ -n "$installDisk" ]; then
 	if (( ( $(($swapSize / 1048576)) + $rootSize + 5) > $diskSize )); then
 		echo "Sum of partition sizes are greater than size of disk. Aborting..."
