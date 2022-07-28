@@ -16,7 +16,7 @@ source=('xlunch_precompiled' 'xlunch_menu_precompiled' 'monocleOS' 'monocleOS-re
 sha256sums=('4e578283544c131cc3089eddda912d7013dda7ea49b1375fe40b73fb9ffd17d9'
             'd8c2ac853a530e6e049f12da497de4232db8887633748158944bd2f6b601308c'
             'eb3f15ed4f482e93d75398e15219b86ac1cec5484d688e57f340ccff1f2a84ec'
-            'f0622aae0a29bd60505b5468546c9d1d03ff6db1ef60600529dc18889bed0040'
+            'b392637f80a016ceee153db576441fde8e0d5fd6c684ddaf449c4a75ebbf4409'
             'ed5855ffc350f335762949bd6ebb6e755a084ee30831cc744063de9c06bb91fa'
             'fc3e46c81a71fb8c16b739773d62651ed511aabe60df5dc56003dbaaf8ee0f9d'
             'd1ad17c0b9c5848c16c81ceadc6883298c0841a3bbd28ab1d783eb01ea4470a7'
