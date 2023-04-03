@@ -218,7 +218,7 @@ The layout of Polybar and xlunch does not work amazingly well on monitor resolut
 
 ### Reporting Bugs
 
-If you find more ~~bad coding~~ mishaps, please let me know, and I'll try to figure something out when I'm bored. Any suggestions are welcome! Attach as many relevant logs, screenshots, etc. as possible - Note: when installing, the `INSTALL.sh` script will output to `monocleOS_Install.log`.
+If you find more ~~bad coding~~ mishaps, please let me know, and I'll try to figure something out when I'm bored. Any suggestions are welcome! Attach as many relevant logs, screenshots, etc. as possible - note: when installing, the `INSTALL.sh` script will output to `monocleOS_Install.log`.
 
 ## Todo
 

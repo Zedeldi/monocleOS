@@ -1,6 +1,7 @@
 [220403]
 
 Changed sd-plymouth to plymouth hook in mkinitcpio.conf
+Allow other package archive formats
 Tidy all code, tabs are now spaces
 Use heredocs instead of echoing to arch-chroot
 

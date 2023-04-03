@@ -130,7 +130,6 @@ if [ -d "$precompiled" ]; then
 else
     installPrecompiled=0
 fi
-chrootInst=`mktemp`
 
 # Configuration
 installer="yay"
@@ -306,7 +305,7 @@ cp $chnglog $rootMount/var/monocle/monocleOS/
 if [[ $installPrecompiled == 1 ]]; then
     cp -R $precompiled $rootMount/var/monocle/monocleOS/
 fi
-mkdir -p $rootMount/var/recovery/
+mkdir -p $rootMount/var/recovery
 echo $packages > $pkgfile
 cp $pkgfile $rootMount/var/recovery/
 cp $pkgtar $rootMount/var/recovery/
@@ -317,7 +316,7 @@ if [[ $bootloader == "efi" ]]; then
 fi
 
 # Preserve environment variables from install
-mkdir -p $rootMount/etc/
+mkdir -p $rootMount/etc
 cat << EOF > $rootMount/etc/monocleOS.env
 luksUUID='$luksUUID'
 rootUUID='$rootUUID'
@@ -329,11 +328,11 @@ secureBoot='$secureBoot'
 VG='$VG'
 homeLabel='$homeLabel'
 homeLV='$homeLV'
-kmodules='$kmodules'"
+kmodules='$kmodules'
 EOF
 
 # Create installer script for arch-chroot
-cat << EOF > $chrootInst
+cat << EOF | arch-chroot $rootPath
 #!/bin/bash
 
 # Configuration
@@ -353,7 +352,8 @@ echo "monocleOS	UUID=$luksUUID	/priv/defaultKey.bin	luks" >> /etc/crypttab.initr
 echo '[multilib]
 Include = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
 pacman -Sy
-## Creating Users
+
+# Users
 useradd -rmd /var/monocle -c 'System User' monocle
 chown -R monocle:monocle /var/monocle
 useradd -rmd /var/recovery -c 'Recovery User' recovery
@@ -368,7 +368,10 @@ user ALL=(recovery) ALL
 user ALL=(recovery)NOPASSWD:/usr/bin/monocleOS-recovery --installBase, /usr/bin/monocleOS-recovery --installExtract, /usr/bin/monocleOS-recovery --installMonocle
 user ALL=(root)NOPASSWD:/usr/bin/initMonocle
 user ALL=(root)NOPASSWD:/usr/bin/monocleOS --themeColour user
-user ALL=(root) /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0, /usr/bin/cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 1, /usr/bin/cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 1, /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 /tmp/luksKey.tmp, /usr/bin/passwd recovery, /usr/bin/monocleOS-recovery --resetFormat 0, /usr/bin/monocleOS-recovery --resetFormat 1, /usr/bin/monocleOS-recovery --resetDefaults, /usr/bin/monocleOS-recovery --resetPassword, /usr/bin/monocleOS-recovery --resetPermissions, /usr/bin/true' > /etc/sudoers.d/monocleOS; chown root:root /etc/sudoers.d/monocleOS; chmod 0440 /etc/sudoers.d/monocleOS; visudo -cf /etc/sudoers.d/monocleOS || rm /etc/sudoers.d/monocleOS
+user ALL=(root) /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0, /usr/bin/cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 1, /usr/bin/cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 1, /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 /tmp/luksKey.tmp, /usr/bin/passwd recovery, /usr/bin/monocleOS-recovery --resetFormat 0, /usr/bin/monocleOS-recovery --resetFormat 1, /usr/bin/monocleOS-recovery --resetDefaults, /usr/bin/monocleOS-recovery --resetPassword, /usr/bin/monocleOS-recovery --resetPermissions, /usr/bin/true' > /etc/sudoers.d/monocleOS
+chown root:root /etc/sudoers.d/monocleOS
+chmod 0440 /etc/sudoers.d/monocleOS
+visudo -cf /etc/sudoers.d/monocleOS || rm /etc/sudoers.d/monocleOS
 passwd -l root
 passwd -l monocle
 passwd -l recovery
@@ -380,20 +383,18 @@ cd
 git clone https://aur.archlinux.org/$installer.git
 cd $installer
 makepkg -si --noconfirm
-sudo -iu monocle
-if [[ '${installPrecompiled}' == 1 ]]; then
-    cd /var/monocle/monocleOS/'${precompiled}'
-    for package in *.pkg.tar.*
-    do
-        '${installer}' -U --noconfirm $package
+if [[ $installPrecompiled == 1 ]]; then
+    cd /var/monocle/monocleOS/$precompiled
+    for package in *.pkg.tar.*; do
+        $installer -U --noconfirm \$package
     done
 fi
-sudo -iu monocle
 cd
 $installer -S --needed --noconfirm $packages
 cd monocleOS
 tar -xzvf $pkgtar
 makepkg -si --noconfirm
+exit
 
 # Configuration
 localectl set-x11-keymap $xkeymap
@@ -472,6 +473,7 @@ cp /etc/monocleOS/launcher.conf /home/user/.config/monocleOS/launcher.conf
 cp /etc/monocleOS/tips-service.conf /home/user/.config/monocleOS/tips-service.conf
 touch /home/user/.hushlogin
 touch /home/user/.firstBoot
+exit
 
 # Themes
 echo "mkdir -p /root/.icons/default
@@ -486,8 +488,6 @@ cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource /usr/share/themes/Arc/gtk-3.0/gtk
 cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk
 cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk
 EOF
-
-arch-chroot $rootPath $chrootInst
 
 umount -R $rootPath
 swapoff /dev/$VG/$swapLV
