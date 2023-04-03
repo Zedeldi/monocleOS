@@ -383,7 +383,7 @@ makepkg -si --noconfirm
 sudo -iu monocle
 if [[ '${installPrecompiled}' == 1 ]]; then
     cd /var/monocle/monocleOS/'${precompiled}'
-    for package in *.pkg.tar.xz
+    for package in *.pkg.tar.*
     do
         '${installer}' -U --noconfirm $package
     done
