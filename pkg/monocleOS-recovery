@@ -89,7 +89,7 @@ function funcResetPassword {
     echo "monocleOS	UUID=$luksUUID	/priv/defaultKey.bin	luks" > /etc/crypttab.initramfs
     echo MODULES=\($kmodules\) | tee /etc/mkinitcpio.conf > /dev/null
     echo FILES=\(/priv/defaultKey.bin\) | tee -a /etc/mkinitcpio.conf > /dev/null
-    echo HOOKS=\(base systemd sd-plymouth keyboard autodetect sd-vconsole modconf block sd-encrypt lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null
+    echo HOOKS=\(base systemd plymouth keyboard autodetect sd-vconsole modconf block sd-encrypt lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null
     mkinitcpio -P
     newPW="`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`"
     echo "user:$newPW" | chpasswd 

@@ -1,11 +1,11 @@
 # Maintainer: Zack Didcott
 
 pkgname=monocleos
-pkgver=1
+pkgver=1.2
 pkgrel=1
 pkgdesc="monocleOS package"
 arch=('i686' 'x86_64')
-url=""
+url="https://github.com/Zedeldi/monocleOS"
 license=('GPL3')
 depends=('sh' 'libx11' 'imlib2')
 makedepends=('git' 'gcc' 'make' 'sed' 'grep')
