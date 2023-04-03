@@ -155,7 +155,7 @@ Enabled systemd services:
 - NetworkManager
 - ntpd
 - avahi-daemon
-- org.cups.cupsd
+- cups
 - automatic-update.timer
 - linux-modules-cleanup
 - clamav-freshclam

@@ -243,7 +243,8 @@ if [ -n "$installDisk" ]; then
     if [[ $bootloader == "efi" ]]; then
         mkfs.fat -F32 $efiPath
     fi
-    mkfs.ext4 -FL $bootLabel $bootPath
+    # grub fails to install for i386-pc platform if metadata_csum_seed is enabled
+    mkfs.ext4 -O ^metadata_csum_seed -FL $bootLabel $bootPath
     cryptsetup -q luksFormat $luksPath --key-file=$luksKey
     luksUUID=`cryptsetup luksUUID $luksPath`
     cryptsetup open $luksPath $luksMap --key-file=$luksKey
@@ -421,7 +422,7 @@ if [[ $bootloader == "efi" ]]; then
     else
         efibootmgr --verbose --disk $installDisk --part 1 --create --label 'monocleOS' --loader /EFI/GRUB/grubx64.efi
     fi
-elif [[ $bootloader == "mbr" ]]; then 
+elif [[ $bootloader == "mbr" ]]; then
     grub-install --target=i386-pc $installDisk
     grub-install --target=i386-pc --force $installDisk'1'
 fi
@@ -431,7 +432,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 systemctl enable NetworkManager
 systemctl enable ntpd
 systemctl enable avahi-daemon
-systemctl enable org.cups.cupsd
+systemctl enable cups
 usermod -aG cups user
 systemctl enable automatic-update.timer
 systemctl enable linux-modules-cleanup
@@ -476,7 +477,7 @@ touch /home/user/.firstBoot
 exit
 
 # Themes
-echo "mkdir -p /root/.icons/default
+mkdir -p /root/.icons/default
 cp /etc/monocleOS/icons.default /root/.icons/default/index.theme 
 mkdir -p /root/.config/gtk-3.0
 ln -sf /home/user/.config/gtk-3.0/settings.ini /root/.config/gtk-3.0/settings.ini
