@@ -1,6 +1,7 @@
 [220403]
 
 Changed sd-plymouth to plymouth hook in mkinitcpio.conf
+Add KMS hook
 Allow other package archive formats
 Disable metadata_csum_seed for boot partition
     - See https://askubuntu.com/a/1131970

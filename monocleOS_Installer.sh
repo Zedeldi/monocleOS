@@ -406,8 +406,10 @@ sed -i 's/BACKLIGHT_PLACEHOLDER/'$backlight'/g' /etc/monocleOS/polybar.conf.skel
 sed -i 's/BATTERY_PLACEHOLDER/'$battery'/g' /etc/monocleOS/polybar.conf.skel
 echo MODULES=\($kmodules\) | tee /etc/mkinitcpio.conf > /dev/null
 echo FILES=\(/priv/defaultKey.bin\) | tee -a /etc/mkinitcpio.conf > /dev/null
-echo HOOKS=\(base systemd plymouth keyboard autodetect sd-vconsole modconf block sd-encrypt lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null
-if (echo $kmodules | grep -iq 'nvidia'); then mv /etc/pacman.d/hooks/nvidia.hook.disabled /etc/pacman.d/hooks/nvidia.hook; fi
+echo HOOKS=\(base systemd plymouth keyboard autodetect sd-vconsole modconf kms block sd-encrypt lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null
+if (echo $kmodules | grep -iq 'nvidia'); then
+    mv /etc/pacman.d/hooks/nvidia.hook.disabled /etc/pacman.d/hooks/nvidia.hook
+fi
 mkinitcpio -P
 sed -i 's/KPARAMS_PLACEHOLDER/'$kparams'/g' /etc/default/grub.monocleOS
 cp /etc/default/grub.monocleOS /etc/default/grub
