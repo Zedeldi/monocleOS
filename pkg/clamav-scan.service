@@ -1,5 +1,5 @@
 [Unit]
-Description=Scanning of for downloads harmful files
+Description=Scan downloads for harmful files
 
 [Service]
 Type=simple

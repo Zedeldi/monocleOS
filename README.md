@@ -283,5 +283,3 @@ If you found monocleOS useful, and would like to make a donation, you're an awes
 My bitcoin address is: [bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536](bitcoin://bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536)
 
 [![Bitcoin](../assets/bitcoin.png?raw=true)](bitcoin://bc1q5aygkqypxuw7cjg062tnh56sd0mxt0zd5md536)
-
-“We make a living by what we get. We make a life by what we give.” ― Winston Churchill

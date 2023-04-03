@@ -19,55 +19,59 @@
 source /etc/monocleOS.env
 
 function funcSystem {
-	optUpdate="-Syu --noconfirm"
-	optClean="-Sc --noconfirm"
-	systemd-inhibit --why="System Updating..." sudo -u monocle $installer $optUpdate
-	systemd-inhibit --why="System Updating..." sudo -u monocle $installer $optClean
+    optUpdate="-Syu --noconfirm"
+    optClean="-Sc --noconfirm"
+    systemd-inhibit --why="System Updating..." sudo -u monocle $installer $optUpdate
+    systemd-inhibit --why="System Updating..." sudo -u monocle $installer $optClean
 }
 
-## Pacman Hook Functions
+# Pacman Hook Functions
 
 function funcGrub {
-	if [[ $bootloader == "efi" ]]; then
-		grub-install --target=$bootloaderArch-efi --efi-directory=$efiPath --bootloader-id=GRUB
-		if [[ $secureBoot = 1 ]]; then cp $efiPath/EFI/GRUB/grubx64.efi $efiPath/EFI/Boot/loader.efi; fi # for secure boot, but won't do any harm if copied anyway
-	else # Assume MBR if not EFI
-		# find mapper device, then find physical partition for mapper (LVM on LUKS) device, then find device that parition resides in: quite simple really... :P
-		dev="$(basename "$(readlink -f /sys/class/block/"$(ls /sys/class/block/"$(basename "$(readlink -f /dev/mapper/$VG)")"/slaves)"/..)")"
-		grub-install --target=i386-pc /dev/$dev
-		grub-install --target=i386-pc --force /dev/$dev'1'
-	fi
+    if [[ $bootloader == "efi" ]]; then
+        grub-install --target=$bootloaderArch-efi --efi-directory=$efiPath --bootloader-id=GRUB
+        if [[ $secureBoot = 1 ]]; then
+            # For secure boot
+            cp $efiPath/EFI/GRUB/grubx64.efi $efiPath/EFI/Boot/loader.efi
+        fi
+    else  # Assume MBR if not EFI
+        # Find mapper device, then find physical partition for mapper (LVM on LUKS) device
+        # then find in which device that partition resides
+        dev="$(basename "$(readlink -f /sys/class/block/"$(ls /sys/class/block/"$(basename "$(readlink -f /dev/mapper/$VG)")"/slaves)"/..)")"
+        grub-install --target=i386-pc /dev/$dev
+        grub-install --target=i386-pc --force /dev/$dev'1'
+    fi
 }
 
 function funcMirrorlist {
-	reflector --latest 25 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
-	rm -f /etc/pacman.d/mirrorlist.pacnew
+    reflector --latest 25 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
+    rm -f /etc/pacman.d/mirrorlist.pacnew
 }
 
 function funcTheme {
-	# Backup New Update
-	cp /usr/share/themes/Arc/gtk-2.0/gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc.bk
-	cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk
-	cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk
-	cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk
-	# User Preferences
-	cp /home/user/.config/monocleOS/arc_gtk2_gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc
-	cp /home/user/.config/monocleOS/arc_gtk3_gtk_gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource
-	cp /home/user/.config/monocleOS/arc_dark_gtk2_gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc
-	cp /home/user/.config/monocleOS/arc_dark_gtk3_gtk_gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource
+    # Backup New Update
+    cp /usr/share/themes/Arc/gtk-2.0/gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc.bk
+    cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk
+    cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk
+    cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk
+    # User Preferences
+    cp /home/user/.config/monocleOS/arc_gtk2_gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc
+    cp /home/user/.config/monocleOS/arc_gtk3_gtk_gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource
+    cp /home/user/.config/monocleOS/arc_dark_gtk2_gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc
+    cp /home/user/.config/monocleOS/arc_dark_gtk3_gtk_gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource
 }
 
 case "$1" in
-	--grub)
-		funcGrub
-		;;
-	--mirrorlist)
-		funcMirrorlist
-		;;
-	--theme)
-		funcTheme
-		;;
-	*)
-		funcSystem
-		;;
+    --grub)
+        funcGrub
+        ;;
+    --mirrorlist)
+        funcMirrorlist
+        ;;
+    --theme)
+        funcTheme
+        ;;
+    *)
+        funcSystem
+        ;;
 esac

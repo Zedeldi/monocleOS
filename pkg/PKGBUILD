@@ -54,55 +54,55 @@ sha256sums=('4e578283544c131cc3089eddda912d7013dda7ea49b1375fe40b73fb9ffd17d9'
             '1780c064138848c3f2c668d9618e2d34ef815bcda872dc8ca57c98780d9ac7ba')
 
 #build() {
-#	cd "$srcdir/xlunch"
-#	make DESTDIR="../../xlunch/"
+#    cd "$srcdir/xlunch"
+#    make DESTDIR="../../xlunch/"
 #}
 
 package() {
-	mkdir -p "$pkgdir"/usr/share/
-	mkdir -p "$pkgdir"/usr/share/plymouth/themes/
-	cp -R plymouth/* "$pkgdir"/usr/share/plymouth/themes/
-	cp -R backgrounds "$pkgdir"/usr/share/backgrounds
-	cp -R desktop "$pkgdir"/usr/share/desktop
-	cp -R xlunch_data "$pkgdir"/usr/share/xlunch
-	mkdir -p "$pkgdir/usr/share/monocleOS/"
-	install -Dm644 launcher.conf "$pkgdir"/etc/monocleOS/launcher.conf
-	install -Dm644 tips-service.conf "$pkgdir"/etc/monocleOS/tips-service.conf
-	install -Dm755 tips-service "$pkgdir"/usr/bin/tips-service
-	install -Dm755 application-wrapper "$pkgdir"/usr/bin/application-wrapper
-	install -Dm644 dunstrc "$pkgdir"/etc/monocleOS/dunstrc.skel
-	install -Dm644 i3.conf "$pkgdir"/etc/monocleOS/i3.conf.skel
-	install -Dm644 polybar.conf "$pkgdir"/etc/monocleOS/polybar.conf.skel
-	install -Dm755 polybar.sh "$pkgdir"/usr/bin/polybar.sh
-	install -Dm644 bash_profile "$pkgdir"/etc/monocleOS/bash_profile.skel
-	install -Dm755 xinitrc "$pkgdir"/etc/monocleOS/xinitrc.skel
-	install -Dm644 icons.default "$pkgdir"/etc/monocleOS/icons.default
-	install -Dm644 gtkSettings.ini "$pkgdir"/etc/monocleOS/gtkSettings.ini
-	install -Dm644 gtkrc "$pkgdir"/etc/monocleOS/gtkrc
-	install -Dm644 Trolltech.conf "$pkgdir"/etc/monocleOS/Trolltech.conf
-	install -Dm644 pam_environment "$pkgdir"/etc/monocleOS/pam_environment.skel
-	install -Dm644 automatic-update.service "$pkgdir"/usr/lib/systemd/system/automatic-update.service
-	install -Dm644 automatic-update.timer "$pkgdir"/usr/lib/systemd/system/automatic-update.timer
-	install -Dm644 clamav-scan.service "$pkgdir"/usr/lib/systemd/system/clamav-scan.service
-	install -Dm644 clamav-scan.timer "$pkgdir"/usr/lib/systemd/system/clamav-scan.timer
-	install -Dm644 grub "$pkgdir"/etc/default/grub.monocleOS
-	install -Dm644 autologin.conf "$pkgdir"/etc/systemd/system/getty@tty1.service.d/override.conf
-	install -Dm644 grubUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/grubUpgrade.hook
-	install -Dm644 mirrorUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/mirrorUpgrade.hook
-	install -Dm644 themeUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/themeUpgrade.hook
-	install -Dm644 nvidia.hook "$pkgdir"/etc/pacman.d/hooks/nvidia.hook.disabled
-	install -Dm644 40-libinput.conf "$pkgdir"/etc/X11/xorg.conf.d/40-libinput.conf
-	install -Dm644 50-lockdown.conf "$pkgdir"/etc/X11/xorg.conf.d/50-lockdown.conf
-	install -Dm644 nsswitch.conf "$pkgdir"/etc/monocleOS/nsswitch.conf
-	#install -Dm644 os-release "$pkgdir"/etc/os-release
-	#install -Dm755 ./xlunch/xlunch "$pkgdir"/usr/bin/xlunch
-	install -Dm755 xlunch_precompiled "$pkgdir"/usr/bin/xlunch
-	install -Dm755 xlunch_menu_precompiled "$pkgdir"/usr/bin/xlunch_menu
-	install -Dm644 entries.dsv.skel "$pkgdir"/etc/xlunch/entries.dsv.skel
-	install -Dm755 monocleOS "$pkgdir"/usr/bin/monocleOS
-	install -Dm755 initMonocle "$pkgdir"/usr/bin/initMonocle
-	install -Dm755 monocleOS-recovery "$pkgdir"/usr/bin/monocleOS-recovery
-	install -Dm755 update "$pkgdir"/usr/bin/update
-	install -Dm755 toggleTouchpad.sh "$pkgdir"/usr/bin/toggleTouchpad.sh
-	install -Dm644 onboard.theme "$pkgdir"/usr/share/onboard/themes/monocleOS.theme
+    mkdir -p "$pkgdir"/usr/share/
+    mkdir -p "$pkgdir"/usr/share/plymouth/themes/
+    cp -R plymouth/* "$pkgdir"/usr/share/plymouth/themes/
+    cp -R backgrounds "$pkgdir"/usr/share/backgrounds
+    cp -R desktop "$pkgdir"/usr/share/desktop
+    cp -R xlunch_data "$pkgdir"/usr/share/xlunch
+    mkdir -p "$pkgdir/usr/share/monocleOS/"
+    install -Dm644 launcher.conf "$pkgdir"/etc/monocleOS/launcher.conf
+    install -Dm644 tips-service.conf "$pkgdir"/etc/monocleOS/tips-service.conf
+    install -Dm755 tips-service "$pkgdir"/usr/bin/tips-service
+    install -Dm755 application-wrapper "$pkgdir"/usr/bin/application-wrapper
+    install -Dm644 dunstrc "$pkgdir"/etc/monocleOS/dunstrc.skel
+    install -Dm644 i3.conf "$pkgdir"/etc/monocleOS/i3.conf.skel
+    install -Dm644 polybar.conf "$pkgdir"/etc/monocleOS/polybar.conf.skel
+    install -Dm755 polybar.sh "$pkgdir"/usr/bin/polybar.sh
+    install -Dm644 bash_profile "$pkgdir"/etc/monocleOS/bash_profile.skel
+    install -Dm755 xinitrc "$pkgdir"/etc/monocleOS/xinitrc.skel
+    install -Dm644 icons.default "$pkgdir"/etc/monocleOS/icons.default
+    install -Dm644 gtkSettings.ini "$pkgdir"/etc/monocleOS/gtkSettings.ini
+    install -Dm644 gtkrc "$pkgdir"/etc/monocleOS/gtkrc
+    install -Dm644 Trolltech.conf "$pkgdir"/etc/monocleOS/Trolltech.conf
+    install -Dm644 pam_environment "$pkgdir"/etc/monocleOS/pam_environment.skel
+    install -Dm644 automatic-update.service "$pkgdir"/usr/lib/systemd/system/automatic-update.service
+    install -Dm644 automatic-update.timer "$pkgdir"/usr/lib/systemd/system/automatic-update.timer
+    install -Dm644 clamav-scan.service "$pkgdir"/usr/lib/systemd/system/clamav-scan.service
+    install -Dm644 clamav-scan.timer "$pkgdir"/usr/lib/systemd/system/clamav-scan.timer
+    install -Dm644 grub "$pkgdir"/etc/default/grub.monocleOS
+    install -Dm644 autologin.conf "$pkgdir"/etc/systemd/system/getty@tty1.service.d/override.conf
+    install -Dm644 grubUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/grubUpgrade.hook
+    install -Dm644 mirrorUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/mirrorUpgrade.hook
+    install -Dm644 themeUpgrade.hook "$pkgdir"/etc/pacman.d/hooks/themeUpgrade.hook
+    install -Dm644 nvidia.hook "$pkgdir"/etc/pacman.d/hooks/nvidia.hook.disabled
+    install -Dm644 40-libinput.conf "$pkgdir"/etc/X11/xorg.conf.d/40-libinput.conf
+    install -Dm644 50-lockdown.conf "$pkgdir"/etc/X11/xorg.conf.d/50-lockdown.conf
+    install -Dm644 nsswitch.conf "$pkgdir"/etc/monocleOS/nsswitch.conf
+    #install -Dm644 os-release "$pkgdir"/etc/os-release
+    #install -Dm755 ./xlunch/xlunch "$pkgdir"/usr/bin/xlunch
+    install -Dm755 xlunch_precompiled "$pkgdir"/usr/bin/xlunch
+    install -Dm755 xlunch_menu_precompiled "$pkgdir"/usr/bin/xlunch_menu
+    install -Dm644 entries.dsv.skel "$pkgdir"/etc/xlunch/entries.dsv.skel
+    install -Dm755 monocleOS "$pkgdir"/usr/bin/monocleOS
+    install -Dm755 initMonocle "$pkgdir"/usr/bin/initMonocle
+    install -Dm755 monocleOS-recovery "$pkgdir"/usr/bin/monocleOS-recovery
+    install -Dm755 update "$pkgdir"/usr/bin/update
+    install -Dm755 toggleTouchpad.sh "$pkgdir"/usr/bin/toggleTouchpad.sh
+    install -Dm644 onboard.theme "$pkgdir"/usr/share/onboard/themes/monocleOS.theme
 }

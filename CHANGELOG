@@ -16,8 +16,8 @@ Removed redundant packages.txt
 Added LICENSE (GPL v3)
 Added GPL heading to important scripts
 Tidied up directory for initial Git commit
-	-> removed Precompiled_Packages
-	-> removed compressed monocleOS package
+    -> removed Precompiled_Packages
+    -> removed compressed monocleOS package
 Included xlunch source code in package
 Added README.md
 
@@ -27,22 +27,22 @@ Added README.md
 Added AppArmor support
 Added DontZap to Xorg's ServerFlags
 Added installation of specific drivers and microcode
-	-> support for nvidia, amdgpu/radeon, intel graphics
-	-> added early KMS. graphics drivers should be in initramfs
+    -> support for nvidia, amdgpu/radeon, intel graphics
+    -> added early KMS. graphics drivers should be in initramfs
 Improved modification of mkinitcpio.conf
-	-> allows kernel modules to be specified from installer
+    -> allows kernel modules to be specified from installer
 Removed close from "gtk-decoration-layout=menu:close"
-	-> Polybar handles window action buttons
+    -> Polybar handles window action buttons
 Removed labels from Polybar by default
-	-> gives a cleaner, more modern look
-	-> ...aaaand removes issues for small screens
-	-> added option to add them back in Settings > Themes & Personalisation > Status Bar
+    -> gives a cleaner, more modern look
+    -> ...aaaand removes issues for small screens
+    -> added option to add them back in Settings > Themes & Personalisation > Status Bar
 Simplified logo
 Added onboard and mousetweaks for on-screen keyboard support
-	-> added i3 shortcut to open onboard $mod+K
-	-> defaults are defined by gsettings on .firstBoot in monocleOS
+    -> added i3 shortcut to open onboard $mod+K
+    -> defaults are defined by gsettings on .firstBoot in monocleOS
 Updated precompiled packages
-	-> grub-silent has patched missing unicode.pf2 so removed from package
+    -> grub-silent has patched missing unicode.pf2 so removed from package
 
 
 [200227]
@@ -56,28 +56,28 @@ Improved installer fatal error checking
 [191028]
 
 Fixed major issue with sudo inside subshells where authentication was needed twice
-	-> echo -e "$password" | sudo -Sv specified in subshells to reauthenticate
-		<- using !tty_tickets would solve the problem, but create a massive security hole, in that any process run by the user would have sudo access during that time
+    -> echo -e "$password" | sudo -Sv specified in subshells to reauthenticate
+        <- using !tty_tickets would solve the problem, but create a massive security hole, in that any process run by the user would have sudo access during that time
 Fixed major bug where polybar messed up commands which relied on STDIN
-	-> appended >/dev/null 2>&1 &
+    -> appended >/dev/null 2>&1 &
 Fixed major issues with recovery functions
-	-> removed all systemd-inhibit's from function calls
-		-> these caused errors, presumably should be run as root ¯\_(ツ)_/¯
-	-> fixed ownership permissions of /home/user on factory reset
-	-> fixed permissions of /var/recovery where files were set to 444, thus recovery user could not overwrite files in monocleOS update
-		-> set to 700, allows recovery rwx
-	-> added extract & reinstall monocleOS to factory reset function
-	-> added configuration needed for various configs when reinstalled, i.e. polybar.conf
+    -> removed all systemd-inhibit's from function calls
+        -> these caused errors, presumably should be run as root ¯\_(ツ)_/¯
+    -> fixed ownership permissions of /home/user on factory reset
+    -> fixed permissions of /var/recovery where files were set to 444, thus recovery user could not overwrite files in monocleOS update
+        -> set to 700, allows recovery rwx
+    -> added extract & reinstall monocleOS to factory reset function
+    -> added configuration needed for various configs when reinstalled, i.e. polybar.conf
 Fixed zenity error dialogues where both error and success messages would show
-	-> this got awfully confusing
-	-> success dialogue is shown at end of subshell sequence. failed commands will exit with error, with || { zenity ...; exit 1 }, thus never reach success. :(
-		<- error function should be implemented soon, else things gonna get messy
+    -> this got awfully confusing
+    -> success dialogue is shown at end of subshell sequence. failed commands will exit with error, with || { zenity ...; exit 1 }, thus never reach success. :(
+        <- error function should be implemented soon, else things gonna get messy
 Made 'Waiting for automatic updates to stop' a separate function
 Improved verfication of package for monocleOS --recoveryUpdate
-	-> removed UUOC and added check for PKGBUILD
-	-> added progress bar during extracting to keep the user entertained
+    -> removed UUOC and added check for PKGBUILD
+    -> added progress bar during extracting to keep the user entertained
 Fixed extraction of package
-	-> NTS: don't use relative paths in scripts...
+    -> NTS: don't use relative paths in scripts...
 Moved tips-service --daemon to .xinitrc from i3 config in order to make it die when x is killed
 Reduced sleep time in polybar.sh
 Increased width of recovery key entry dialogue
@@ -95,53 +95,53 @@ Removed lock hint, as it cannot show over gnome-screensaver due to tty locking
 [191005]
 
 Improved efficiency of tips-service
-	-> tips are defined in arrays (app tips use associative arrays), removing a billion if statements
-	-> makes adding new tips easier
+    -> tips are defined in arrays (app tips use associative arrays), removing a billion if statements
+    -> makes adding new tips easier
 Corrected wording in automatic-updates.timer, grubUpgrade.hook
 Changed recovery key save message
 Automatic updates fixed
-	-> unit is run as root
-	-> update is run by sudo -u monocle
-		-> allows systemd-inhibit to work. cannot find a reason as to why this didn't before
+    -> unit is run as root
+    -> update is run by sudo -u monocle
+        -> allows systemd-inhibit to work. cannot find a reason as to why this didn't before
 Switched location of lock and power off icon
 Added new hostname on reset
 Recovery
-	-> reinstall monocle now builds package in separate directory
-	-> added manual update of monocleOS package option
-		-> funcUpdateCopy requires recovery user password to copy to /var/recovery
-		-> trivial check is performed to verify that package is monocleos by grep
-	-> added hostname to recovery key document
-	-> closes all open applications gracefully when starting action
+    -> reinstall monocle now builds package in separate directory
+    -> added manual update of monocleOS package option
+        -> funcUpdateCopy requires recovery user password to copy to /var/recovery
+        -> trivial check is performed to verify that package is monocleos by grep
+    -> added hostname to recovery key document
+    -> closes all open applications gracefully when starting action
 Polybar
-	-> added labels to window buttons
-	-> added closeAll function, using i3 [class=".*"] kill
+    -> added labels to window buttons
+    -> added closeAll function, using i3 [class=".*"] kill
 Various bug fixes
 Added linux & linux-firmware to packages.txt
-	-> for some stupid reason it was removed from base group
+    -> for some stupid reason it was removed from base group
 
 
 [190912]
 
 Removed unused files from tar:
-	-> camera_shutter.wav, cronUpdate, systab
+    -> camera_shutter.wav, cronUpdate, systab
 Replaced grub-shusher with grub-silent
-	-> removed 10_linux
-	-> changed /etc/default/grub
-	-> doesn't seem to build grub-mkfont, thus unicode.pf2 has been added to pkg. installer.sh will copy if needed to /boot/grub/fonts
+    -> removed 10_linux
+    -> changed /etc/default/grub
+    -> doesn't seem to build grub-mkfont, thus unicode.pf2 has been added to pkg. installer.sh will copy if needed to /boot/grub/fonts
 Included efibootmgr for efi without secure boot
-	-> changed label for secure boot to 'monocleOS Signed'
+    -> changed label for secure boot to 'monocleOS Signed'
 Polybar does not start on .firstBoot
 Added support for installing precompiled packages on install
-	-> will install all packages in dir, shortening install time
-	-> obvs they'll still be compiled on auto updates
+    -> will install all packages in dir, shortening install time
+    -> obvs they'll still be compiled on auto updates
 installer.sh:
-	-> tabs changed to spaces to prevent arch-chroot (bash) interpreting them for tab-completion
-	-> for loop inside own echo '' as local var didn't expand
-	-> created INSTALL.sh, redirects all output to a log file and takes installDisk as an argument
+    -> tabs changed to spaces to prevent arch-chroot (bash) interpreting them for tab-completion
+    -> for loop inside own echo '' as local var didn't expand
+    -> created INSTALL.sh, redirects all output to a log file and takes installDisk as an argument
 Factory reset:
-	-> using a hardcoded location for a tmp keyfile instead of echoing it to luksKeyChange
-		-> added appropriate sudoers
-	-> shreds all files in /home/user if overwrite=1 - does not unmount /home and reformat (this was a stupid idea)
+    -> using a hardcoded location for a tmp keyfile instead of echoing it to luksKeyChange
+        -> added appropriate sudoers
+    -> shreds all files in /home/user if overwrite=1 - does not unmount /home and reformat (this was a stupid idea)
 Increase iconPadding to allow for larger fonts
 Added x-systemd.device-timeout=0 to fstab for root
 
@@ -150,21 +150,21 @@ Added x-systemd.device-timeout=0 to fstab for root
 
 Added systemd-inhibit to recovery reinstall functions
 Added pgrep update to recovery reinstall functions
-	-> sends SIGINT and waits for it to stop every 11s w/ zenity dialogue
+    -> sends SIGINT and waits for it to stop every 11s w/ zenity dialogue
 Pointed all pacman hook execs to /usr/bin/update
 Grub-shusher implemented to patch grub on update by pacman hook
-	-> added to installer.sh
+    -> added to installer.sh
 Grub is reinstalled on update of package
 Fixed efiPath logic in installer
 Changed some wording for zenity dialogues
 Environment vars from install are echoed to /etc/monocleOS.env and sourced instead of sed'ing files
 Moved all reinstall and factory reset recovery options to a separate executable -> this can be referenced outside of /usr/bin/monocleOS in the future e.g. an RE
 Added a factory reset option in settings
-	-> extra sudoers lines needed: user can execute factory reset as root with user password
-	-> arch-install-scripts required for genfstab - could replace with sed but that's a pain
-		-> this also allows monocleOS to be installed from itself with installer.sh, could be implemented in future but needs to be made graphical
+    -> extra sudoers lines needed: user can execute factory reset as root with user password
+    -> arch-install-scripts required for genfstab - could replace with sed but that's a pain
+        -> this also allows monocleOS to be installed from itself with installer.sh, could be implemented in future but needs to be made graphical
 Removed redundant else statements in monocleOS where || was also specified
-	-> this only caused issues
+    -> this only caused issues
 cp changelog to new root
 
 
@@ -174,47 +174,47 @@ Replaced cron with systemd timers
 Increased width of shutdown, sleep, etc. timer dialogues
 Used i3 reload in place of pkill x where possible
 Added tips-service
-	-> daemon is started in i3 config
-	-> settings added in monocleOS, separate config file
+    -> daemon is started in i3 config
+    -> settings added in monocleOS, separate config file
 Fixed Files desktop icon, exec'ing nautilus -> thunar
 Plymouth
-	-> added plymouth 'Enter your password' dialogue
-		-> image overlays entry box, becomes transparent when bullets appear, returns when none.
-	-> lowered goodbye on shutdown
+    -> added plymouth 'Enter your password' dialogue
+        -> image overlays entry box, becomes transparent when bullets appear, returns when none.
+    -> lowered goodbye on shutdown
 Fixed initMonocle not removing line from sudoers.d/monocleOS
 Rejigged some code for launchers to check if entries file exists
 Added default vars in case user config file does not exist
 All user applications are launched from application-wrapper
-	-> allows various 'hooks' to be implemented easily
-	-> used for showing a hint per app, on launch
+    -> allows various 'hooks' to be implemented easily
+    -> used for showing a hint per app, on launch
 
 
 [190822]
 
 Changed lockscreen from i3lock-color to gnome-screensaver
-	-> locks at tty level and looks more like plymouth
-	-> configured on firstBoot
+    -> locks at tty level and looks more like plymouth
+    -> configured on firstBoot
 Changed from py3status to polybar
-	-> removed redundant packages for py3status
-	-> removed desktop launcher search button
-		<- lowered desktop launcher search button
-		<- made launcherSearch windowed to fit under polybar
-	-> added awesome and material icons fonts
-	-> added buttons to allow floating, and window layouts
-		-> made i3 click to focus for this reason
-	-> installer replaced BATTERY & BACKLIGHT_PLACEHOLDER in polybar.conf on install, if available
+    -> removed redundant packages for py3status
+    -> removed desktop launcher search button
+        <- lowered desktop launcher search button
+        <- made launcherSearch windowed to fit under polybar
+    -> added awesome and material icons fonts
+    -> added buttons to allow floating, and window layouts
+        -> made i3 click to focus for this reason
+    -> installer replaced BATTERY & BACKLIGHT_PLACEHOLDER in polybar.conf on install, if available
 Removed launcherSearch from desktop and added launcherMenu to polybar
-	-> added to SettingsThemeColour by launcher.conf
+    -> added to SettingsThemeColour by launcher.conf
 Added dunst as notification daemon
-	-> started in xinitrc
-	-> added dunstrc to SettingsThemeColour
+    -> started in xinitrc
+    -> added dunstrc to SettingsThemeColour
 Changed screenshot logic - no button, only PrtScr does -i
 Removed window decoration for gtk-3.0, replaced uniformly by polybar
 Internet connectivity check moved to monocleOS, for use externally, from initMonocle
-	-> also not exec'd by root which is more secure
+    -> also not exec'd by root which is more secure
 Added warning dialogue for advanced settings
 Reduced magnification to 2x
-	-> changed notification to notify-send instead of zenity
+    -> changed notification to notify-send instead of zenity
 Made gnome-calculator float by default
 Improved wording of dialogues
 Added pavucontrol as sound option
@@ -224,7 +224,7 @@ Re-added goodbye to plymouth with nicer coding, needs testing
 RELEASE NOTES
 ---
 Install now takes longer, due to compilation of polybar
-	-> consider compiling this before and installing bin
+    -> consider compiling this before and installing bin
 
 
 [190813]

@@ -19,26 +19,27 @@
 source /etc/monocleOS.env
 
 function funcClose {
-	kill=9
+    kill=9
 
-	zenity --width 200 --question --title="Close Applcation" --text "Do you want to forcefully close this application?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		#xkill -id `xprop -root _NET_ACTIVE_WINDOW | cut -d\# -f2` # xprop returns id of active window, xkill terminates it - this solution is equivalent to SIGKILL
-		pid=`xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d\# -f2) | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$'` # xprop returns id of active window, is passed to xprop to get PID... then grep'd
-		kill -$kill $pid
-	else
-		exit
-	fi
+    zenity --width 200 --question --title="Close Applcation" --text "Do you want to forcefully close this application?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        # xkill -id `xprop -root _NET_ACTIVE_WINDOW | cut -d\# -f2` # xprop returns id of active window, xkill terminates it - this solution is equivalent to SIGKILL
+        # xprop returns id of active window, is passed to xprop to get PID... then grep'd
+        pid=`xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d\# -f2) | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$'` 
+        kill -$kill $pid
+    else
+        exit
+    fi
 }
 
 function funcCloseAll {
-	zenity --width 200 --question --title="Close All Applcations" --text "Do you want to exit all applications?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		#xdotool search "" windowkill %@ # Kills ALL xorg child processes, including i3
-		i3-msg '[class=".*"] kill'
-	else
-		exit
-	fi
+    zenity --width 200 --question --title="Close All Applcations" --text "Do you want to exit all applications?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        # xdotool search "" windowkill %@ # Kills ALL xorg child processes, including i3
+        i3-msg '[class=".*"] kill'
+    else
+        exit
+    fi
 }
 
 # NOT IMPLEMENTED YET! Function to keep all error messages uniformed and relative to an error code. Pass to function with funcError [error].
@@ -54,134 +55,134 @@ function funcCloseAll {
 #}
 
 function funcFreeSpaceCheck {
-	if [[ $1 = 'System' ]]; then
-		free=$(df -B 1073741824 /dev/mapper/monocleOS-System | tail -1 | awk '{print $4}' | sed 's/[A-Za-z]*//g')
-		if [[ $free -lt 5 ]]; then echo "is running low on system storage. Automatic updates may fail. Please contact your system administrator."; fi
-	elif [[ $1 = 'Home' ]]; then
-		free=$(df -B 1073741824 /dev/mapper/monocleOS-Home | tail -1 | awk '{print $4}' | sed 's/[A-Za-z]*//g')
-		if [[ $free -lt 5 ]]; then echo "is running low on user storage. You may need to delete or move some files soon."
-		else echo "has ${free}GiB of storage left."; fi
-	fi
+    if [[ $1 = 'System' ]]; then
+        free=$(df -B 1073741824 /dev/mapper/monocleOS-System | tail -1 | awk '{print $4}' | sed 's/[A-Za-z]*//g')
+        if [[ $free -lt 5 ]]; then echo "is running low on system storage. Automatic updates may fail. Please contact your system administrator."; fi
+    elif [[ $1 = 'Home' ]]; then
+        free=$(df -B 1073741824 /dev/mapper/monocleOS-Home | tail -1 | awk '{print $4}' | sed 's/[A-Za-z]*//g')
+        if [[ $free -lt 5 ]]; then echo "is running low on user storage. You may need to delete or move some files soon."
+        else echo "has ${free}GiB of storage left."; fi
+    fi
 }
 
 function funcGames {
-	# https://wiki.archlinux.org/index.php/List_of_games
-	selection=`zenity --height=250 --title "Games" --list --column "Select a Game" "Cards" "Chess" "Four in a Row" "Mahjongg" "Mines" "Quadrapassel" "Reversi" "Sudoku"` || exit
-	if [[ $selection = "Cards" ]]; then exec /usr/bin/application-wrapper cards
-	elif [[ $selection = "Chess" ]]; then exec /usr/bin/application-wrapper chess
-	elif [[ $selection = "Four in a Row" ]]; then exec /usr/bin/application-wrapper four_in_a_row
-	elif [[ $selection = "Mahjongg" ]]; then exec /usr/bin/application-wrapper mahjongg
-	elif [[ $selection = "Mines" ]]; then exec /usr/bin/application-wrapper mines
-	elif [[ $selection = "Quadrapassel" ]]; then exec /usr/bin/application-wrapper quadrapassel
-	elif [[ $selection = "Reversi" ]]; then exec /usr/bin/application-wrapper reversi
-	elif [[ $selection = "Sudoku" ]]; then exec /usr/bin/application-wrapper sudoku
-	else zenity --width=200 --error --title="Error" --text="Something went wrong."
-	fi
+    # https://wiki.archlinux.org/index.php/List_of_games
+    selection=`zenity --height=250 --title "Games" --list --column "Select a Game" "Cards" "Chess" "Four in a Row" "Mahjongg" "Mines" "Quadrapassel" "Reversi" "Sudoku"` || exit
+    if [[ $selection = "Cards" ]]; then exec /usr/bin/application-wrapper cards
+    elif [[ $selection = "Chess" ]]; then exec /usr/bin/application-wrapper chess
+    elif [[ $selection = "Four in a Row" ]]; then exec /usr/bin/application-wrapper four_in_a_row
+    elif [[ $selection = "Mahjongg" ]]; then exec /usr/bin/application-wrapper mahjongg
+    elif [[ $selection = "Mines" ]]; then exec /usr/bin/application-wrapper mines
+    elif [[ $selection = "Quadrapassel" ]]; then exec /usr/bin/application-wrapper quadrapassel
+    elif [[ $selection = "Reversi" ]]; then exec /usr/bin/application-wrapper reversi
+    elif [[ $selection = "Sudoku" ]]; then exec /usr/bin/application-wrapper sudoku
+    else zenity --width=200 --error --title="Error" --text="Something went wrong."
+    fi
 }
 
 function funcIcon {
-	configSkel='/etc/xlunch/entries.dsv.skel'
-	configDir='/home/'$USER'/.config/xlunch/'
-	configFile='entries.dsv'
+    configSkel='/etc/xlunch/entries.dsv.skel'
+    configDir='/home/'$USER'/.config/xlunch/'
+    configFile='entries.dsv'
 
-	declare -a appName=('Calculator' 'Calendar' 'Camera' 'Email' 'Files' 'Games' 'Media Player' 'Office' 'Web' 'Magnifier' 'Screenshot' 'Sleep' 'Lock')
-	declare -a appStatus=(TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE)
+    declare -a appName=('Calculator' 'Calendar' 'Camera' 'Email' 'Files' 'Games' 'Media Player' 'Office' 'Web' 'Magnifier' 'Screenshot' 'Sleep' 'Lock')
+    declare -a appStatus=(TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE)
 
-	# To Do: Find current status by reading from file
-	selection=`zenity --height=350 --width=300 --list  --text "Which applications should be displayed?" --checklist  --column "Select" --column "Application" ${appStatus[0]} "${appName[0]}" ${appStatus[1]} "${appName[1]}" ${appStatus[2]} "${appName[2]}" ${appStatus[3]} "${appName[3]}" ${appStatus[4]} "${appName[4]}" ${appStatus[5]} "${appName[5]}" ${appStatus[6]} "${appName[6]}" ${appStatus[7]} "${appName[7]}" ${appStatus[8]} "${appName[8]}" ${appStatus[9]} "${appName[9]}" ${appStatus[10]} "${appName[10]}" ${appStatus[11]} "${appName[11]}" ${appStatus[12]} "${appName[12]}" --separator=":"`
+    # To Do: Find current status by reading from file
+    selection=`zenity --height=350 --width=300 --list  --text "Which applications should be displayed?" --checklist  --column "Select" --column "Application" ${appStatus[0]} "${appName[0]}" ${appStatus[1]} "${appName[1]}" ${appStatus[2]} "${appName[2]}" ${appStatus[3]} "${appName[3]}" ${appStatus[4]} "${appName[4]}" ${appStatus[5]} "${appName[5]}" ${appStatus[6]} "${appName[6]}" ${appStatus[7]} "${appName[7]}" ${appStatus[8]} "${appName[8]}" ${appStatus[9]} "${appName[9]}" ${appStatus[10]} "${appName[10]}" ${appStatus[11]} "${appName[11]}" ${appStatus[12]} "${appName[12]}" --separator=":"`
 
-	if [ $? = 0 ]; then
-		[[ -d $configDir ]] || mkdir $configDir # Mkdir if not already exist
-		rm /home/$USER/Desktop/*.desktop
-		cp $configSkel $configDir$configFile
-		while IFS=':' read -ra APP; do # Parse each line with separator and create array
-			for i in "${APP[@]}"; do # Parse array into $i
-				# Write to entries.dsv
-				# sed -i '/<pattern>/s/^/#/g' file # To comment
-				sed -i "/$i/s/^#//g" $configDir$configFile
-				desktopFile=`find /usr/share/desktop -type f -iname "$i.desktop" -print0`
-				if [[ -e "$desktopFile" ]]; then cp "$desktopFile" /home/$USER/Desktop/; fi
-			done
-		done <<< "$selection"
-		#pkill x # logout wouldn't work as not login shell. NOTE: this isn't graceful
-		pkill xlunch
-		monocleOS --launcher &
-		exit
-	else
-		exit
-	fi
+    if [ $? = 0 ]; then
+        [[ -d $configDir ]] || mkdir $configDir # Mkdir if not already exist
+        rm /home/$USER/Desktop/*.desktop
+        cp $configSkel $configDir$configFile
+        while IFS=':' read -ra APP; do # Parse each line with separator and create array
+            for i in "${APP[@]}"; do # Parse array into $i
+                # Write to entries.dsv
+                # sed -i '/<pattern>/s/^/#/g' file # To comment
+                sed -i "/$i/s/^#//g" $configDir$configFile
+                desktopFile=`find /usr/share/desktop -type f -iname "$i.desktop" -print0`
+                if [[ -e "$desktopFile" ]]; then cp "$desktopFile" /home/$USER/Desktop/; fi
+            done
+        done <<< "$selection"
+        # pkill x # logout wouldn't work as not login shell. NOTE: this isn't graceful
+        pkill xlunch
+        monocleOS --launcher &
+        exit
+    else
+        exit
+    fi
 }
 
 function funcInternetCheck {
-	if ping -q -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
-		zenity --width 200 --info --title="Connecting to the Internet..." --text="You are successfully connected to the internet."
-	else
-		zenity --width 200 --question --title="Connecting to the Internet..." --text "Cannot connect to the internet.\nWould you like to set up a WiFi connection?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then monocleOS --wifi; fi
-	fi
+    if ping -q -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
+        zenity --width 200 --info --title="Connecting to the Internet..." --text="You are successfully connected to the internet."
+    else
+        zenity --width 200 --question --title="Connecting to the Internet..." --text "Cannot connect to the internet.\nWould you like to set up a WiFi connection?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then monocleOS --wifi; fi
+    fi
 }
 
 function funcInternetCheckNoX {
-	if ping -q -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
-		if [[ $1 = 'label' ]]; then echo  Online
-		else echo ; fi
-	else
-		if [[ $1 = 'label' ]]; then echo  Offline
-		else echo ; fi
-	fi
+    if ping -q -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
+        if [[ $1 = 'label' ]]; then echo  Online
+        else echo ; fi
+    else
+        if [[ $1 = 'label' ]]; then echo  Offline
+        else echo ; fi
+    fi
 }
 
 # Padding values in launchers are adjusted to fit most screens
 function funcLauncher {
-	if [[ -e /home/$USER/.firstBoot ]]; then
-		## gsettings
-		# gnome-screensaver
-		gsettings set org.gnome.desktop.screensaver picture-uri file:///home/user/.wallpaper.png
-		# onboard
-		gsettings set org.gnome.desktop.interface toolkit-accessibility true
-		gsettings set org.onboard layout '/usr/share/onboard/layouts/Compact.onboard'
-		gsettings set org.onboard theme '/usr/share/onboard/themes/monocleOS.theme'
-		gsettings set org.onboard show-status-icon false
-		gsettings set org.onboard.auto-show enabled true
-		gsettings set org.onboard snippets '[]'
-		gsettings set org.onboard.typing-assistance auto-capitalization true
-		gsettings set org.onboard.typing-assistance.word-suggestions enabled true
-		gsettings set org.onboard.window docking-enabled true
-		# Setup system
-		sudo /usr/bin/initMonocle $USER
-		/usr/bin/monocleOS --internetCheck
-		while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
-			/usr/bin/monocleOS --icon
-			if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-				zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
-			fi
-		done
-		/usr/bin/polybar.sh
-		notify-send -u normal -t 10000 -a "monocleOS Setup" "All done! Your PC is ready to use. "
-		exit # monocleOS --icon restarts launcher, so we can just quit here
-	elif [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-		zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
-		while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
-			/usr/bin/monocleOS --icon
-			if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-				zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
-			fi
-		done
-	else
-		if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then
-			# Defaults
-			gridIconSize=64
-			gridVPadding=30
-			gridFontSize=12
-		else
-			# User Preferences
-			source /home/$USER/.config/monocleOS/launcher.conf
-		fi
-		nohup xlunch --input /home/$USER/.config/xlunch/entries.dsv \
-		--noprompt \
+    if [[ -e /home/$USER/.firstBoot ]]; then
+        # == gsettings ==
+        # gnome-screensaver
+        gsettings set org.gnome.desktop.screensaver picture-uri file:///home/user/.wallpaper.png
+        # onboard
+        gsettings set org.gnome.desktop.interface toolkit-accessibility true
+        gsettings set org.onboard layout '/usr/share/onboard/layouts/Compact.onboard'
+        gsettings set org.onboard theme '/usr/share/onboard/themes/monocleOS.theme'
+        gsettings set org.onboard show-status-icon false
+        gsettings set org.onboard.auto-show enabled true
+        gsettings set org.onboard snippets '[]'
+        gsettings set org.onboard.typing-assistance auto-capitalization true
+        gsettings set org.onboard.typing-assistance.word-suggestions enabled true
+        gsettings set org.onboard.window docking-enabled true
+        # == Setup system ==
+        sudo /usr/bin/initMonocle $USER
+        /usr/bin/monocleOS --internetCheck
+        while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
+            /usr/bin/monocleOS --icon
+            if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+                zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
+            fi
+        done
+        /usr/bin/polybar.sh
+        notify-send -u normal -t 10000 -a "monocleOS Setup" "All done! Your PC is ready to use. "
+        exit # monocleOS --icon restarts launcher, so we can just quit here
+    elif [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+        zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
+        while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
+            /usr/bin/monocleOS --icon
+            if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+                zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
+            fi
+        done
+    else
+        if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then
+            # Defaults
+            gridIconSize=64
+            gridVPadding=30
+            gridFontSize=12
+        else
+            # User Preferences
+            source /home/$USER/.config/monocleOS/launcher.conf
+        fi
+        nohup xlunch --input /home/$USER/.config/xlunch/entries.dsv \
+        --noprompt \
                 --background "/home/$USER/.wallpaper.png" \
                 --iconpadding 40 \
-		--iconvpadding $gridVPadding \
+        --iconvpadding $gridVPadding \
                 --textpadding 10 \
                 --iconsize $gridIconSize \
                 --columns 5 \
@@ -192,968 +193,968 @@ function funcLauncher {
                 --multiple \
                 --dontquit \
                 --desktop &
-		# --button '/usr/share/xlunch/icons/categories/20x20/all.png;/usr/share/xlunch/icons/categories/20x20/all.png;15,45;/usr/bin/monocleOS --launcherSearch'
-	fi
+        # --button '/usr/share/xlunch/icons/categories/20x20/all.png;/usr/share/xlunch/icons/categories/20x20/all.png;15,45;/usr/bin/monocleOS --launcherSearch'
+    fi
 }
 
 function funcLauncherSearch {
-	if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-		zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
-		while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
-			/usr/bin/monocleOS --icon
-			if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-				zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
-			fi
-		done
-	else
-		xlunch --input /home/$USER/.config/xlunch/entries.dsv \
-		--prompt "Search: " \
-		--windowed \
-		--selectonly \
-		--textafter \
-		--background "/home/$USER/.wallpaper.png" \
-		--iconpadding 10 \
-		--iconvpadding 5 \
-		--textpadding 10 \
-		--leastmargin 20 \
-		--iconsize 48 \
-		--columns 2 \
-		--hidemissing \
-		--font "/usr/share/fonts/TTF/DejaVuSans.ttf/14" \
-		--button '/usr/share/xlunch/icons/categories/20x20/others.png;/usr/share/xlunch/icons/categories/20x20/others.png;15,15;true'
-	fi
+    if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+        zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
+        while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
+            /usr/bin/monocleOS --icon
+            if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+                zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
+            fi
+        done
+    else
+        xlunch --input /home/$USER/.config/xlunch/entries.dsv \
+        --prompt "Search: " \
+        --windowed \
+        --selectonly \
+        --textafter \
+        --background "/home/$USER/.wallpaper.png" \
+        --iconpadding 10 \
+        --iconvpadding 5 \
+        --textpadding 10 \
+        --leastmargin 20 \
+        --iconsize 48 \
+        --columns 2 \
+        --hidemissing \
+        --font "/usr/share/fonts/TTF/DejaVuSans.ttf/14" \
+        --button '/usr/share/xlunch/icons/categories/20x20/others.png;/usr/share/xlunch/icons/categories/20x20/others.png;15,15;true'
+    fi
 }
 
 function funcLauncherMenu {
-	if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-		zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
-		while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
-			/usr/bin/monocleOS --icon
-			if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
-				zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
-			fi
-		done
-	else
-		if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then
-			# Defaults
-			menuBG=#0088CCCC
-		else
-			# User Preferences
-			source /home/$USER/.config/monocleOS/launcher.conf
-		fi
-		menuBG="${menuBG//\#}" # xlunch doesn't want # passed to it
-		xlunch_menu --input /home/$USER/.config/xlunch/entries.dsv \
-		--prompt "Search: " \
-		--windowed \
-		-x 0 -y 30 \
-		--width 600 \
-		--height 800 \
-		--selectonly \
-		--textafter \
-		--backgroundcolor $menuBG \
-		--iconpadding 10 \
-		--iconvpadding 5 \
-		--textpadding 10 \
-		--leastmargin 20 \
-		--iconsize 48 \
-		--columns 2 \
-		--hidemissing \
-		--focuslostterminate \
-		--font "/usr/share/fonts/TTF/DejaVuSans.ttf/14"
-	fi
+    if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+        zenity --width 200 --error --title="Cannot Start Launcher" --text="Please select your desired programs and click OK."
+        while [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; do
+            /usr/bin/monocleOS --icon
+            if [[ ! -f /home/$USER/.config/xlunch/entries.dsv ]]; then
+                zenity --width 200 --error --title="Selecting Programs Failed" --text="You must select your desired programs and click OK. Please try again."
+            fi
+        done
+    else
+        if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then
+            # Defaults
+            menuBG=#0088CCCC
+        else
+            # User Preferences
+            source /home/$USER/.config/monocleOS/launcher.conf
+        fi
+        menuBG="${menuBG//\#}" # xlunch doesn't want # passed to it
+        xlunch_menu --input /home/$USER/.config/xlunch/entries.dsv \
+        --prompt "Search: " \
+        --windowed \
+        -x 0 -y 30 \
+        --width 600 \
+        --height 800 \
+        --selectonly \
+        --textafter \
+        --backgroundcolor $menuBG \
+        --iconpadding 10 \
+        --iconvpadding 5 \
+        --textpadding 10 \
+        --leastmargin 20 \
+        --iconsize 48 \
+        --columns 2 \
+        --hidemissing \
+        --focuslostterminate \
+        --font "/usr/share/fonts/TTF/DejaVuSans.ttf/14"
+    fi
 }
 
 function funcLock {
-	# This is configured on firstBoot #
-	# gsettings set org.gnome.desktop.screensaver picture-uri file:///home/user/.wallpaper.png
-	gnome-screensaver-command -l
+    # This is configured on firstBoot #
+    # gsettings set org.gnome.desktop.screensaver picture-uri file:///home/user/.wallpaper.png
+    gnome-screensaver-command -l
 }
 
 function funcMagnifier {
-	/usr/bin/xzoom -geometry 200x200+5+35 -mag 2
-	#zenity --width 300 --info --title="Magnifier" --text="To use the screen magnifier, hold the left mouse button over the magnifier and drag your mouse around the screen. To close the magnifier, click on its window and exit as normal."
+    /usr/bin/xzoom -geometry 200x200+5+35 -mag 2
+    #zenity --width 300 --info --title="Magnifier" --text="To use the screen magnifier, hold the left mouse button over the magnifier and drag your mouse around the screen. To close the magnifier, click on its window and exit as normal."
 }
 
 function funcPassword {
-	getPW=1
-	#cryptsetup isLuks $dev && echo "$dev is a LUKS Device" || echo "$dev is not a LUKS Device" # Needs root
+    getPW=1
+    #cryptsetup isLuks $dev && echo "$dev is a LUKS Device" || echo "$dev is not a LUKS Device" # Needs root
 
-	#export SUDO_ASKPASS="/usr/bin/askPass"
-	#sudo -A # Use to gain sudo access, and check current password
+    #export SUDO_ASKPASS="/usr/bin/askPass"
+    #sudo -A # Use to gain sudo access, and check current password
 
-	while [[ $getPW = 1 ]]; do
-		currentPW=`zenity --password --title="Enter Current Password"` || exit
-		echo -e $currentPW | sudo -S true # Verify password with sudo
-		if [ $? != 0 ]; then
-			zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
-		else
-			getPW=0
-		fi
-	done
+    while [[ $getPW = 1 ]]; do
+        currentPW=`zenity --password --title="Enter Current Password"` || exit
+        echo -e $currentPW | sudo -S true # Verify password with sudo
+        if [ $? != 0 ]; then
+            zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
+        else
+            getPW=0
+        fi
+    done
 
-	while [[ "$newPW" != "$confirmPW" ]] || [[ "$newPW" == "" ]]; do
-		newPW=""
-		newPW=`zenity --password --title="Enter New Password"` || exit
-		confirmPW=`zenity --password --title="Confirm New Password"` || exit
-		if [[ "$newPW" != "$confirmPW" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Passwords do not match. Please try again."
-		elif [[ "$newPW" == "" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Password cannot be empty. Please try again."
-		elif [[ "$currentPW" == "$newPW" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Password Unchanged."
-			exit 1
-		fi
-	done
+    while [[ "$newPW" != "$confirmPW" ]] || [[ "$newPW" == "" ]]; do
+        newPW=""
+        newPW=`zenity --password --title="Enter New Password"` || exit
+        confirmPW=`zenity --password --title="Confirm New Password"` || exit
+        if [[ "$newPW" != "$confirmPW" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Passwords do not match. Please try again."
+        elif [[ "$newPW" == "" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Password cannot be empty. Please try again."
+        elif [[ "$currentPW" == "$newPW" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Password Unchanged."
+            exit 1
+        fi
+    done
 
-	(
-	echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
-	echo "33"; sleep 1
-	echo "# Changing password..."
-	echo -e "$currentPW\n$newPW\n$confirmPW" | passwd $USER || { zenity --width 200 --error --title="Changing Password Failed" --text="Unable to change password."; exit 1; } # NOTE: https://stackoverflow.com/questions/3667432/storing-sudo-password-as-variable-in-script-is-it-safe/3667479#3667479
-	echo "66"; sleep 1
-	echo "# Changing password..."
-	# Assuming password change worked
-	echo -e "$currentPW\n$newPW\n$confirmPW" | sudo cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
-	echo "100"; sleep 1
-	zenity --width 200 --info --title="Password Updated" --text="Password Changed Successfully."
-	) | zenity --width 200 --progress --title="Changing Password" --text="Please wait..." --percentage=0 --auto-close --no-cancel
+    (
+    echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
+    echo "33"; sleep 1
+    echo "# Changing password..."
+    echo -e "$currentPW\n$newPW\n$confirmPW" | passwd $USER || { zenity --width 200 --error --title="Changing Password Failed" --text="Unable to change password."; exit 1; } # NOTE: https://stackoverflow.com/questions/3667432/storing-sudo-password-as-variable-in-script-is-it-safe/3667479#3667479
+    echo "66"; sleep 1
+    echo "# Changing password..."
+    # Assuming password change worked
+    echo -e "$currentPW\n$newPW\n$confirmPW" | sudo cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
+    echo "100"; sleep 1
+    zenity --width 200 --info --title="Password Updated" --text="Password Changed Successfully."
+    ) | zenity --width 200 --progress --title="Changing Password" --text="Please wait..." --percentage=0 --auto-close --no-cancel
 }
 
 function funcPoweroff {
-	if pgrep update > /dev/null; then
-		zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically power off when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then
-			while pgrep update > /dev/null; do
-				sleep 30
-			done
-			(
-			echo "0"; sleep 1
-			echo "# Turning off in 9 seconds..."
-			echo "10"; sleep 1
-			echo "# Turning off in 8 seconds..."
-			echo "20"; sleep 1
-			echo "# Turning off in 7 seconds..."
-			echo "30"; sleep 1
-			echo "# Turning off in 6 seconds..."
-			echo "40"; sleep 1
-			echo "# Turning off in 5 seconds..."
-			echo "50"; sleep 1
-			echo "# Turning off in 4 seconds..."
-			echo "60"; sleep 1
-			echo "# Turning off in 3 seconds..."
-			echo "70"; sleep 1
-			echo "# Turning off in 2 seconds..."
-			echo "80"; sleep 1
-			echo "# Turning off in 1 second..."
-			echo "90"; sleep 1
-			echo "# Turning off your PC..."; systemctl poweroff
-			echo "100"; sleep 1
-			) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Turning off in 10 seconds..." --percentage=0 --auto-close || exit
-		else
-			exit
-		fi
-	else
-		systemctl poweroff
-	fi
+    if pgrep update > /dev/null; then
+        zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically power off when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then
+            while pgrep update > /dev/null; do
+                sleep 30
+            done
+            (
+            echo "0"; sleep 1
+            echo "# Turning off in 9 seconds..."
+            echo "10"; sleep 1
+            echo "# Turning off in 8 seconds..."
+            echo "20"; sleep 1
+            echo "# Turning off in 7 seconds..."
+            echo "30"; sleep 1
+            echo "# Turning off in 6 seconds..."
+            echo "40"; sleep 1
+            echo "# Turning off in 5 seconds..."
+            echo "50"; sleep 1
+            echo "# Turning off in 4 seconds..."
+            echo "60"; sleep 1
+            echo "# Turning off in 3 seconds..."
+            echo "70"; sleep 1
+            echo "# Turning off in 2 seconds..."
+            echo "80"; sleep 1
+            echo "# Turning off in 1 second..."
+            echo "90"; sleep 1
+            echo "# Turning off your PC..."; systemctl poweroff
+            echo "100"; sleep 1
+            ) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Turning off in 10 seconds..." --percentage=0 --auto-close || exit
+        else
+            exit
+        fi
+    else
+        systemctl poweroff
+    fi
 }
 
 function funcReboot {
-	if pgrep update > /dev/null; then
-		zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically reboot when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then
-			while pgrep update > /dev/null; do
-				sleep 30
-			done
-			(
-			echo "0"; sleep 1
-			echo "# Rebooting in 9 seconds..."
-			echo "10"; sleep 1
-			echo "# Rebooting in 8 seconds..."
-			echo "20"; sleep 1
-			echo "# Rebooting in 7 seconds..."
-			echo "30"; sleep 1
-			echo "# Rebooting in 6 seconds..."
-			echo "40"; sleep 1
-			echo "# Rebooting in 5 seconds..."
-			echo "50"; sleep 1
-			echo "# Rebooting in 4 seconds..."
-			echo "60"; sleep 1
-			echo "# Rebooting in 3 seconds..."
-			echo "70"; sleep 1
-			echo "# Rebooting in 2 seconds..."
-			echo "80"; sleep 1
-			echo "# Rebooting in 1 second..."
-			echo "90"; sleep 1
-			echo "# Rebooting your PC..."; systemctl reboot
-			echo "100"; sleep 1
-			) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Rebooting in 10 seconds..." --percentage=0 --auto-close || exit
-		else
-			exit
-		fi
-	else
-		systemctl reboot
-	fi
+    if pgrep update > /dev/null; then
+        zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically reboot when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then
+            while pgrep update > /dev/null; do
+                sleep 30
+            done
+            (
+            echo "0"; sleep 1
+            echo "# Rebooting in 9 seconds..."
+            echo "10"; sleep 1
+            echo "# Rebooting in 8 seconds..."
+            echo "20"; sleep 1
+            echo "# Rebooting in 7 seconds..."
+            echo "30"; sleep 1
+            echo "# Rebooting in 6 seconds..."
+            echo "40"; sleep 1
+            echo "# Rebooting in 5 seconds..."
+            echo "50"; sleep 1
+            echo "# Rebooting in 4 seconds..."
+            echo "60"; sleep 1
+            echo "# Rebooting in 3 seconds..."
+            echo "70"; sleep 1
+            echo "# Rebooting in 2 seconds..."
+            echo "80"; sleep 1
+            echo "# Rebooting in 1 second..."
+            echo "90"; sleep 1
+            echo "# Rebooting your PC..."; systemctl reboot
+            echo "100"; sleep 1
+            ) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Rebooting in 10 seconds..." --percentage=0 --auto-close || exit
+        else
+            exit
+        fi
+    else
+        systemctl reboot
+    fi
 }
 
 function funcRecovery {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=250 --title "Recovery Settings" --list --column "Option" "Create a Recovery Key" "Forgot my Password" "Reinstall System" "Perform a Factory Reset" "Manually Update monocleOS"` || funcSettingsAdvanced
-		if [[ $selection = "Create a Recovery Key" ]]; then funcRecoveryKey
-		elif [[ $selection = "Forgot my Password" ]]; then funcRecoveryPassword
-		elif [[ $selection = "Reinstall System" ]]; then funcRecoveryInstall
-		elif [[ $selection = "Perform a Factory Reset" ]]; then funcRecoveryFactory
-		elif [[ $selection = "Manually Update monocleOS" ]]; then funcRecoveryUpdate
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=250 --title "Recovery Settings" --list --column "Option" "Create a Recovery Key" "Forgot my Password" "Reinstall System" "Perform a Factory Reset" "Manually Update monocleOS"` || funcSettingsAdvanced
+        if [[ $selection = "Create a Recovery Key" ]]; then funcRecoveryKey
+        elif [[ $selection = "Forgot my Password" ]]; then funcRecoveryPassword
+        elif [[ $selection = "Reinstall System" ]]; then funcRecoveryInstall
+        elif [[ $selection = "Perform a Factory Reset" ]]; then funcRecoveryFactory
+        elif [[ $selection = "Manually Update monocleOS" ]]; then funcRecoveryUpdate
+        fi
+    done
 }
 
 function funcRecoveryKey {
-	zenity --width 250 --question --title="Create a Recovery Key" --text "Would you like to create a recovery key, in case you forget your password?\nThis will make all previous recovery keys invalid." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		getPW=1
-		while [[ $getPW = 1 ]]; do
-			currentPW=`zenity --password --title="Enter Current Password"` || exit
-			echo -e $currentPW | sudo -S true # Verify password with sudo
-			if [ $? != 0 ]; then
-				zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
-			else
-				getPW=0
-			fi
-		done
-		recvKey="`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`" # Use "tr -dc '[:graph:]'" for all printable characters, not including space
-		(
-		echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
-		echo "25"; sleep 1
-		echo "# Removing any existing recovery keys..."; echo -e "$currentPW" | sudo cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 1 # This may fail, but is not fatal
-		echo "50"; sleep 1
-		echo "# Adding recovery key..."; echo -e "$currentPW\n$recvKey\n$recvKey" | sudo cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 1 || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
-		echo "60"; sleep 1
-		echo "# Adding recovery key..."; echo -e "$recvKey\n$recvKey" | sudo passwd recovery || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
-		echo "75"; sleep 1
-		echo "# Saving recovery key..."; echo -e "Date: `date +'%d/%m/%y %H:%M:%S'`\nYour monocleOS recovery key for $HOSTNAME is:\n\n\t$recvKey\n\nPrint this document and keep it in a safe place." > /home/$USER/Recovery_Key_${HOSTNAME}_`date +'%d%m%y%H%M%S'`.txt || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
-		echo "100"; sleep 1
-		zenity --width 200 --info --title="Recovery Key Added" --text="Success! The key is stored in your files. Please print this document and keep it in a safe place."
-		) | zenity --width 200 --progress --title="Creating Recovery Key" --text="Please wait..." --percentage=0 --auto-close --no-cancel
-	else
-		exit
-	fi
+    zenity --width 250 --question --title="Create a Recovery Key" --text "Would you like to create a recovery key, in case you forget your password?\nThis will make all previous recovery keys invalid." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        getPW=1
+        while [[ $getPW = 1 ]]; do
+            currentPW=`zenity --password --title="Enter Current Password"` || exit
+            echo -e $currentPW | sudo -S true # Verify password with sudo
+            if [ $? != 0 ]; then
+                zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
+            else
+                getPW=0
+            fi
+        done
+        recvKey="`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`" # Use "tr -dc '[:graph:]'" for all printable characters, not including space
+        (
+        echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
+        echo "25"; sleep 1
+        echo "# Removing any existing recovery keys..."; echo -e "$currentPW" | sudo cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 1 # This may fail, but is not fatal
+        echo "50"; sleep 1
+        echo "# Adding recovery key..."; echo -e "$currentPW\n$recvKey\n$recvKey" | sudo cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 1 || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+        echo "60"; sleep 1
+        echo "# Adding recovery key..."; echo -e "$recvKey\n$recvKey" | sudo passwd recovery || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+        echo "75"; sleep 1
+        echo "# Saving recovery key..."; echo -e "Date: `date +'%d/%m/%y %H:%M:%S'`\nYour monocleOS recovery key for $HOSTNAME is:\n\n\t$recvKey\n\nPrint this document and keep it in a safe place." > /home/$USER/Recovery_Key_${HOSTNAME}_`date +'%d%m%y%H%M%S'`.txt || { zenity --width 200 --error --title="Adding a Recovery Key Failed" --text="Unable to add a recovery key."; exit 1; }
+        echo "100"; sleep 1
+        zenity --width 200 --info --title="Recovery Key Added" --text="Success! The key is stored in your files. Please print this document and keep it in a safe place."
+        ) | zenity --width 200 --progress --title="Creating Recovery Key" --text="Please wait..." --percentage=0 --auto-close --no-cancel
+    else
+        exit
+    fi
 }
 
 function funcRecoveryPassword {
-	username=$USER
-	zenity --width 200 --question --title="Reset Password" --text "Would you like to reset your password? You will need a recovery key to continue." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		getPW=1
-		while [[ $getPW = 1 ]]; do
-			recvKey=`zenity --width 350 --entry --title "Enter Recovery Key" --text="Enter a recovery key"` || exit
-			echo -e $recvKey | sudo -Su recovery true # Verify password with sudo
-			if [ $? != 0 ]; then
-				zenity --width 200 --error --title="Authentication Error" --text="Incorrect Recovery Key. Please Try Again."
-			else
-				getPW=0
-			fi
-		done
+    username=$USER
+    zenity --width 200 --question --title="Reset Password" --text "Would you like to reset your password? You will need a recovery key to continue." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        getPW=1
+        while [[ $getPW = 1 ]]; do
+            recvKey=`zenity --width 350 --entry --title "Enter Recovery Key" --text="Enter a recovery key"` || exit
+            echo -e $recvKey | sudo -Su recovery true # Verify password with sudo
+            if [ $? != 0 ]; then
+                zenity --width 200 --error --title="Authentication Error" --text="Incorrect Recovery Key. Please Try Again."
+            else
+                getPW=0
+            fi
+        done
 
-		while [[ "$newPW" != "$confirmPW" ]] || [[ "$newPW" == "" ]]; do
-		newPW=""
-		newPW=`zenity --password --title="Enter New Password"` || exit
-		confirmPW=`zenity --password --title="Confirm New Password"` || exit
-		if [[ "$newPW" != "$confirmPW" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Passwords do not match. Please try again."
-		elif [[ "$newPW" == "" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Password cannot be empty. Please try again."
-		elif [[ "$currentPW" == "$newPW" ]]; then 
-			zenity --width 200 --error --title="Changing Password Failed" --text="Password Unchanged."
-			exit
-		fi
-		done
+        while [[ "$newPW" != "$confirmPW" ]] || [[ "$newPW" == "" ]]; do
+        newPW=""
+        newPW=`zenity --password --title="Enter New Password"` || exit
+        confirmPW=`zenity --password --title="Confirm New Password"` || exit
+        if [[ "$newPW" != "$confirmPW" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Passwords do not match. Please try again."
+        elif [[ "$newPW" == "" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Password cannot be empty. Please try again."
+        elif [[ "$currentPW" == "$newPW" ]]; then 
+            zenity --width 200 --error --title="Changing Password Failed" --text="Password Unchanged."
+            exit
+        fi
+        done
 
-		(
-		echo -e $recvKey | sudo -Svu recovery # Regain sudo access for subshell in case not run from tty
-		echo "25"; sleep 1
-		echo "# Changing password..."
-		sudo -H -u recovery bash -c "echo "$username:$newPW" | sudo chpasswd " || { zenity --width 200 --error --title="Resetting Password Failed" --text="Unable to reset password."; exit 1; }
-		echo "50"; sleep 1
-		echo "# Changing password..."
-		# Assuming password change worked
-		echo -e "$recvKey" | sudo -H -u recovery bash -c "sudo cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 0" || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
-		echo "75"; sleep 1
-		echo "# Changing password..."
-		echo -e "$recvKey\n$newPW\n$confirmPW" | sudo -H -u recovery bash -c "sudo cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 0" || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
-		echo "100"; sleep 1
-		zenity --width 200 --info --title="Password Reset" --text="Success! Your password has been changed."
-		) | zenity --width 200 --progress --title="Resetting Password" --text="Please wait..." --percentage=0 --auto-close --no-cancel
-	else
-		exit
-	fi
+        (
+        echo -e $recvKey | sudo -Svu recovery # Regain sudo access for subshell in case not run from tty
+        echo "25"; sleep 1
+        echo "# Changing password..."
+        sudo -H -u recovery bash -c "echo "$username:$newPW" | sudo chpasswd " || { zenity --width 200 --error --title="Resetting Password Failed" --text="Unable to reset password."; exit 1; }
+        echo "50"; sleep 1
+        echo "# Changing password..."
+        # Assuming password change worked
+        echo -e "$recvKey" | sudo -H -u recovery bash -c "sudo cryptsetup luksKillSlot /dev/disk/by-uuid/$luksUUID 0" || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
+        echo "75"; sleep 1
+        echo "# Changing password..."
+        echo -e "$recvKey\n$newPW\n$confirmPW" | sudo -H -u recovery bash -c "sudo cryptsetup luksAddKey /dev/disk/by-uuid/$luksUUID --key-slot 0" || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
+        echo "100"; sleep 1
+        zenity --width 200 --info --title="Password Reset" --text="Success! Your password has been changed."
+        ) | zenity --width 200 --progress --title="Resetting Password" --text="Please wait..." --percentage=0 --auto-close --no-cancel
+    else
+        exit
+    fi
 }
 
 function funcRecoveryInstall {
-	/usr/bin/monocleOS --updateStop || exit
-	zenity --width 250 --question --title="Reinstall monocleOS" --text "Would you like to reinstall monocleOS? Your data will NOT be deleted.\nThis process can take an hour and cannot be cancelled." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		pkill xlunch; pkill polybar # Stop user launching any applications
-		i3-msg '[class=".*"] kill'
-		(
-		echo "25"; sleep 10
-		echo "# Reinstalling System Programs..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installBase || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
-		echo "50"; sleep 1
-		echo "# Extracting monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
-		echo "75"; sleep 1
-		echo "# Reinstalling monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
-		echo "100"; sleep 1
-		zenity --width 200 --info --title="monocleOS has been Reinstalled" --text="Success! monocleOS has been reinstalled. It is recommended to restart your PC now."
-		pkill x
-		) | zenity --width 200 --progress --title="Reinstalling monocleOS" --text="This process may take up to an hour. Do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
-	else
-		exit
-	fi
+    /usr/bin/monocleOS --updateStop || exit
+    zenity --width 250 --question --title="Reinstall monocleOS" --text "Would you like to reinstall monocleOS? Your data will NOT be deleted.\nThis process can take an hour and cannot be cancelled." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        pkill xlunch; pkill polybar # Stop user launching any applications
+        i3-msg '[class=".*"] kill'
+        (
+        echo "25"; sleep 10
+        echo "# Reinstalling System Programs..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installBase || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
+        echo "50"; sleep 1
+        echo "# Extracting monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
+        echo "75"; sleep 1
+        echo "# Reinstalling monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
+        echo "100"; sleep 1
+        zenity --width 200 --info --title="monocleOS has been Reinstalled" --text="Success! monocleOS has been reinstalled. It is recommended to restart your PC now."
+        pkill x
+        ) | zenity --width 200 --progress --title="Reinstalling monocleOS" --text="This process may take up to an hour. Do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
+    else
+        exit
+    fi
 }
 
 function funcRecoveryFactory {
-	/usr/bin/monocleOS --updateStop || exit
-	zenity --width 300 --question --title="Overwrite Data?" --text "Would you like to securely overwrite your data, so that it is more difficult to recover? This can take a few hours depending on the size of your files. It is recommended to select 'Yes' if you are selling this device." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-	if [ $? = 0 ]; then
-		overwrite=1
-		etaMsg="This process may take a few hours."
-	else
-		overwrite=0
-		etaMsg="This process will take approximately 5 minutes."
-	fi
+    /usr/bin/monocleOS --updateStop || exit
+    zenity --width 300 --question --title="Overwrite Data?" --text "Would you like to securely overwrite your data, so that it is more difficult to recover? This can take a few hours depending on the size of your files. It is recommended to select 'Yes' if you are selling this device." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+    if [ $? = 0 ]; then
+        overwrite=1
+        etaMsg="This process may take a few hours."
+    else
+        overwrite=0
+        etaMsg="This process will take approximately 5 minutes."
+    fi
 
-	confirm=$(zenity --entry --title "Confirm Factory Reset" --text="Type 'YES' in capital letters to proceed. ALL USER DATA WILL BE DELETED.\n$etaMsg") || exit
-	if [[ $confirm != "YES" ]]; then
-		exit 1
-	else
-		getPW=1
-		while [[ $getPW = 1 ]]; do
-			currentPW=`zenity --password --title="Enter Current Password"` || exit
-			echo -e $currentPW | sudo -S true # Verify password with sudo
-			if [ $? != 0 ]; then
-				zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
-			else
-				getPW=0
-			fi
-		done
-		pkill xlunch; pkill polybar # Stop user launching any applications
-		i3-msg '[class=".*"] kill'
-		(
-		echo "10"; sleep 10
-		echo "# Reinstalling monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while extracting. Please verify the integrity of the package."; exit 1; }
-		sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
-		echo "30"; sleep 1
-		echo "# Deleting user data..."; echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
-		# Doing it this way means the user's password is never sent as a parameter to an external command or visible in a file
-		dd if=/dev/urandom of=/tmp/luksKey.tmp bs=512 count=4
-		echo -e "$currentPW" | sudo /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 /tmp/luksKey.tmp || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
-		sudo /usr/bin/monocleOS-recovery --resetFormat $overwrite || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
-		echo "50"; sleep 1
-		echo "# Restoring default settings..."; echo -e $currentPW | sudo -Sv
-		sudo /usr/bin/monocleOS-recovery --resetDefaults || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
-		echo "70"; sleep 1
-		echo "# Resetting permissions"; echo -e $currentPW | sudo -Sv
-		sudo /usr/bin/monocleOS-recovery --resetPermissions || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
-		echo "80"; sleep 1
-		echo "# Removing password..."; echo -e $currentPW | sudo -Sv
-		sudo /usr/bin/monocleOS-recovery --resetPassword || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
-		echo "100"; sleep 1
-		zenity --width 200 --info --title="Factory Reset Complete" --text="Success! Your computer is like new! Press OK to shutdown your PC."; funcPoweroff
-		) | zenity --width 200 --progress --title="Resetting your PC" --text="$etaMsg Do NOT turn off or unplug your device." --percentage=0 --auto-close --no-cancel
-	fi
+    confirm=$(zenity --entry --title "Confirm Factory Reset" --text="Type 'YES' in capital letters to proceed. ALL USER DATA WILL BE DELETED.\n$etaMsg") || exit
+    if [[ $confirm != "YES" ]]; then
+        exit 1
+    else
+        getPW=1
+        while [[ $getPW = 1 ]]; do
+            currentPW=`zenity --password --title="Enter Current Password"` || exit
+            echo -e $currentPW | sudo -S true # Verify password with sudo
+            if [ $? != 0 ]; then
+                zenity --width 200 --error --title="Authentication Error" --text="Incorrect Password. Please Try Again."
+            else
+                getPW=0
+            fi
+        done
+        pkill xlunch; pkill polybar # Stop user launching any applications
+        i3-msg '[class=".*"] kill'
+        (
+        echo "10"; sleep 10
+        echo "# Reinstalling monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while extracting. Please verify the integrity of the package."; exit 1; }
+        sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Reinstalling monocleOS Failed" --text="Something went wrong while reinstalling. Please contact your system administrator."; exit 1; }
+        echo "30"; sleep 1
+        echo "# Deleting user data..."; echo -e $currentPW | sudo -Sv # Regain sudo access for subshell in case not run from tty
+        # Doing it this way means the user's password is never sent as a parameter to an external command or visible in a file
+        dd if=/dev/urandom of=/tmp/luksKey.tmp bs=512 count=4
+        echo -e "$currentPW" | sudo /usr/bin/cryptsetup luksChangeKey /dev/disk/by-uuid/$luksUUID --key-slot 0 /tmp/luksKey.tmp || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
+        sudo /usr/bin/monocleOS-recovery --resetFormat $overwrite || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
+        echo "50"; sleep 1
+        echo "# Restoring default settings..."; echo -e $currentPW | sudo -Sv
+        sudo /usr/bin/monocleOS-recovery --resetDefaults || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
+        echo "70"; sleep 1
+        echo "# Resetting permissions"; echo -e $currentPW | sudo -Sv
+        sudo /usr/bin/monocleOS-recovery --resetPermissions || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
+        echo "80"; sleep 1
+        echo "# Removing password..."; echo -e $currentPW | sudo -Sv
+        sudo /usr/bin/monocleOS-recovery --resetPassword || { zenity --width 200 --error --title="Something Went Wrong" --text="There may be issues with your device. Please contact your system administrator."; exit 1; }
+        echo "100"; sleep 1
+        zenity --width 200 --info --title="Factory Reset Complete" --text="Success! Your computer is like new! Press OK to shutdown your PC."; funcPoweroff
+        ) | zenity --width 200 --progress --title="Resetting your PC" --text="$etaMsg Do NOT turn off or unplug your device." --percentage=0 --auto-close --no-cancel
+    fi
 }
 
 function funcRecoveryUpdate {
-	pkg="/tmp/monocleOS.tar.gz"
-	extractDir=`mktemp -d`
+    pkg="/tmp/monocleOS.tar.gz"
+    extractDir=`mktemp -d`
 
-	/usr/bin/monocleOS --updateStop || exit
+    /usr/bin/monocleOS --updateStop || exit
 
-	pkgtar=`zenity --file-selection --title="Open Package File" --filename=$HOME/` || exit
-	
-	# Verify that supplied package is monocleOS
-	cd $extractDir
-	(
-	echo "33"
-	echo "# Copying..."; cp $pkgtar $pkg; chmod 444 $pkg # Ensure recovery user has read access
-	echo "66"
-	echo "# Extracting..."; tar -xzf $pkg
-	echo "100"
-	) | zenity --width 200 --progress --title="Verifying package..." --text="Please wait..." --percentage=0 --auto-close --no-cancel
-	if [[ ! -f PKGBUILD ]]; then
-		zenity --width 200 --error --title="Invalid Package" --text="The file provided did not contain a PKGBUILD. Exiting..."
-		cd; rm -rf $extractDir $pkg
-		exit 1
-	elif ! grep -qw "pkgname=monocleos" PKGBUILD; then # Verify that PKGBUILD is for monocleOS
-		zenity --width 200 --error --title="Invalid Package" --text="This package is not for monocleOS. Please supply a correct package. Exiting..."
-		cd; rm -rf $extractDir $pkg
-		exit 1
-	else
-		cd; rm -rf $extractDir
-	fi
+    pkgtar=`zenity --file-selection --title="Open Package File" --filename=$HOME/` || exit
+    
+    # Verify that supplied package is monocleOS
+    cd $extractDir
+    (
+    echo "33"
+    echo "# Copying..."; cp $pkgtar $pkg; chmod 444 $pkg # Ensure recovery user has read access
+    echo "66"
+    echo "# Extracting..."; tar -xzf $pkg
+    echo "100"
+    ) | zenity --width 200 --progress --title="Verifying package..." --text="Please wait..." --percentage=0 --auto-close --no-cancel
+    if [[ ! -f PKGBUILD ]]; then
+        zenity --width 200 --error --title="Invalid Package" --text="The file provided did not contain a PKGBUILD. Exiting..."
+        cd; rm -rf $extractDir $pkg
+        exit 1
+    elif ! grep -qw "pkgname=monocleos" PKGBUILD; then # Verify that PKGBUILD is for monocleOS
+        zenity --width 200 --error --title="Invalid Package" --text="This package is not for monocleOS. Please supply a correct package. Exiting..."
+        cd; rm -rf $extractDir $pkg
+        exit 1
+    else
+        cd; rm -rf $extractDir
+    fi
 
-	getPW=1
-	while [[ $getPW = 1 ]]; do
-		recvKey=`zenity --width 350 --entry --title "Enter Recovery Key" --text="Enter a recovery key"` || exit # Ask for password to prevent copying of malicious package
-		echo -e $recvKey | sudo -Su recovery true # Verify password with sudo
-		if [ $? != 0 ]; then
-			zenity --width 200 --error --title="Authentication Error" --text="Incorrect Recovery Key. Please Try Again."
-		else
-			getPW=0
-		fi
-	done
+    getPW=1
+    while [[ $getPW = 1 ]]; do
+        recvKey=`zenity --width 350 --entry --title "Enter Recovery Key" --text="Enter a recovery key"` || exit # Ask for password to prevent copying of malicious package
+        echo -e $recvKey | sudo -Su recovery true # Verify password with sudo
+        if [ $? != 0 ]; then
+            zenity --width 200 --error --title="Authentication Error" --text="Incorrect Recovery Key. Please Try Again."
+        else
+            getPW=0
+        fi
+    done
 
-	pkill xlunch; pkill polybar # Stop user launching any applications
-	i3-msg '[class=".*"] kill'
-	(
-	echo "25"; sleep 5
-	echo "# Copying package files..."; echo -e $recvKey | sudo -Svu recovery # Regain sudo access for subshell in case not run from tty
-	sudo -H -u recovery /usr/bin/monocleOS-recovery --updateCopy $pkg || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while updating. Please contact your system administrator."; exit 1; } # Requires sudo password
-	echo "50"; sleep 1
-	echo "# Extracting monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while extracting. Please verify the integrity of the package."; exit 1; }
-	echo "75"; sleep 1
-	echo "# Updating monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while updating. Please contact your system administrator."; exit 1; }
-	echo "100"; sleep 1
-	zenity --width 200 --info --title="monocleOS has been Updated" --text="Success! monocleOS has been updated. It is recommended to restart your PC now."
-	rm -f $pkg
-	pkill x
-	) | zenity --width 200 --progress --title="Updating monocleOS" --text="This process shouldn't take too long. Do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
+    pkill xlunch; pkill polybar # Stop user launching any applications
+    i3-msg '[class=".*"] kill'
+    (
+    echo "25"; sleep 5
+    echo "# Copying package files..."; echo -e $recvKey | sudo -Svu recovery # Regain sudo access for subshell in case not run from tty
+    sudo -H -u recovery /usr/bin/monocleOS-recovery --updateCopy $pkg || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while updating. Please contact your system administrator."; exit 1; } # Requires sudo password
+    echo "50"; sleep 1
+    echo "# Extracting monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installExtract || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while extracting. Please verify the integrity of the package."; exit 1; }
+    echo "75"; sleep 1
+    echo "# Updating monocleOS..."; sudo -H -u recovery /usr/bin/monocleOS-recovery --installMonocle || { zenity --width 200 --error --title="Updating monocleOS Failed" --text="Something went wrong while updating. Please contact your system administrator."; exit 1; }
+    echo "100"; sleep 1
+    zenity --width 200 --info --title="monocleOS has been Updated" --text="Success! monocleOS has been updated. It is recommended to restart your PC now."
+    rm -f $pkg
+    pkill x
+    ) | zenity --width 200 --progress --title="Updating monocleOS" --text="This process shouldn't take too long. Do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
 }
 
 function funcScreenshot {
-	gnome-screenshot -i
-	#gnome-screenshot -ac; aplay /usr/share/monocleOS/camera_shutter.wav & zenity --width 200 --info --title="Screenshot Taken" --text="A picture of your screen has been copied to your clipboard."
-	# Screen flash - for scrnum in $(seq 0 $((`xrandr | grep -iwc 'connected'` - 1))); do xcalib -a -b 35 -o $scrnum; done; for scrnum in $(seq 0 $((`xrandr | grep -iwc 'connected'` - 1))); do xcalib -c -o $scrnum; done
+    gnome-screenshot -i
+    #gnome-screenshot -ac; aplay /usr/share/monocleOS/camera_shutter.wav & zenity --width 200 --info --title="Screenshot Taken" --text="A picture of your screen has been copied to your clipboard."
+    # Screen flash - for scrnum in $(seq 0 $((`xrandr | grep -iwc 'connected'` - 1))); do xcalib -a -b 35 -o $scrnum; done; for scrnum in $(seq 0 $((`xrandr | grep -iwc 'connected'` - 1))); do xcalib -c -o $scrnum; done
 }
 
 function funcSettings {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=300 --title "Settings" --list --column "Option" "Add/Remove Programs" "Change your Password" "Hints & Tips" "Themes & Personalisation" "Sound" "WiFi Settings" "Advanced"` || exit
-		if [[ $selection = "Add/Remove Programs" ]]; then funcIcon
-		elif [[ $selection = "Change your Password" ]]; then funcPassword
-		elif [[ $selection = "Hints & Tips" ]]; then funcSettingsTips
-		elif [[ $selection = "Themes & Personalisation" ]]; then funcSettingsTheme
-		elif [[ $selection = "Sound" ]]; then exec pavucontrol
-		elif [[ $selection = "WiFi Settings" ]]; then funcWifi
-		elif [[ $selection = "Advanced" ]]; then funcSettingsAdvanced
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=300 --title "Settings" --list --column "Option" "Add/Remove Programs" "Change your Password" "Hints & Tips" "Themes & Personalisation" "Sound" "WiFi Settings" "Advanced"` || exit
+        if [[ $selection = "Add/Remove Programs" ]]; then funcIcon
+        elif [[ $selection = "Change your Password" ]]; then funcPassword
+        elif [[ $selection = "Hints & Tips" ]]; then funcSettingsTips
+        elif [[ $selection = "Themes & Personalisation" ]]; then funcSettingsTheme
+        elif [[ $selection = "Sound" ]]; then exec pavucontrol
+        elif [[ $selection = "WiFi Settings" ]]; then funcWifi
+        elif [[ $selection = "Advanced" ]]; then funcSettingsAdvanced
+        fi
+    done
 }
 
 function funcSettingsAdvanced {
-	zenity --width 200 --question --title="Warning" --text "Changing advanced settings may be dangerous to your PC. Are you sure you want to continue?" --ok-label="Continue" --cancel-label="Go Back"
-	if [ $? = 0 ]; then
-		selection=""
-		while [[ $selection = "" ]]; do
-			selection=`zenity --height=300 --title "Settings - Advanced" --list --column "Option" "Network" "Printers" "Recovery" "Terminal" "Wine" "Open System Monitor"` || funcSettings
-			if [[ $selection = "Network" ]]; then exec nm-connection-editor
-			elif [[ $selection = "Printers" ]]; then exec system-config-printer
-			elif [[ $selection = "Recovery" ]]; then funcRecovery
-			elif [[ $selection = "Terminal" ]]; then exec gnome-terminal
-			elif [[ $selection = "Wine" ]]; then funcWine
-			elif [[ $selection = "Open System Monitor" ]]; then exec gnome-system-monitor
-			fi
-		done
-	else
-		funcSettings
-	fi
+    zenity --width 200 --question --title="Warning" --text "Changing advanced settings may be dangerous to your PC. Are you sure you want to continue?" --ok-label="Continue" --cancel-label="Go Back"
+    if [ $? = 0 ]; then
+        selection=""
+        while [[ $selection = "" ]]; do
+            selection=`zenity --height=300 --title "Settings - Advanced" --list --column "Option" "Network" "Printers" "Recovery" "Terminal" "Wine" "Open System Monitor"` || funcSettings
+            if [[ $selection = "Network" ]]; then exec nm-connection-editor
+            elif [[ $selection = "Printers" ]]; then exec system-config-printer
+            elif [[ $selection = "Recovery" ]]; then funcRecovery
+            elif [[ $selection = "Terminal" ]]; then exec gnome-terminal
+            elif [[ $selection = "Wine" ]]; then funcWine
+            elif [[ $selection = "Open System Monitor" ]]; then exec gnome-system-monitor
+            fi
+        done
+    else
+        funcSettings
+    fi
 }
 
 function funcSettingsTheme {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=300 --title "Settings - Personalisation" --list --column "Option" "Colours" "Light/Dark Theme" "Change your Wallpaper" "Status Bar" "Font Size" "Icon Size" "Vertical Icon Spacing"` || funcSettings
-		if [[ $selection = "Colours" ]]; then sudo /usr/bin/monocleOS --themeColour $USER # function requires current username passed to it as run with sudo. NOTE: $2 to call, $1 to function
-		elif [[ $selection = "Light/Dark Theme" ]]; then funcThemeGTK
-		elif [[ $selection = "Change your Wallpaper" ]]; then funcWallpaper
-		elif [[ $selection = "Status Bar" ]]; then funcStatusbar
-		elif [[ $selection = "Font Size" ]]; then
-			fontSize=`zenity --scale --title="Font Size" --text="Select a font size" --min-value=10 --max-value=16 --value=12`
-			if [ $? = 0 ]; then
-				sed -i '/'gridFontSize='/s/.*/'gridFontSize=$fontSize'/' /home/$USER/.config/monocleOS/launcher.conf
-				sed -i "s/font pango:DejaVu Sans.*/font pango:DejaVu Sans $fontSize/g" /home/$USER/.config/i3/config
-				sed -i '/'gtk-font-name='/s/.*/'gtk-font-name="Cantarell ${fontSize}"'/' /home/$USER/.gtkrc-2.0
-				sed -i "/gtk-font-name=/s/.*/gtk-font-name=Cantarell ${fontSize}/" /home/$USER/.config/gtk-3.0/settings.ini
-				pkill xlunch
-				i3 reload
-				monocleOS --launcher &
-			else
-				exit
-			fi
-		elif [[ $selection = "Icon Size" ]]; then
-			iconSize=`zenity --scale --title="Icon Size" --text="Select an icon size" --min-value=42 --max-value=72 --value=64`
-			if [ $? = 0 ]; then
-				sed -i '/'gridIconSize='/s/.*/'gridIconSize=$iconSize'/' /home/$USER/.config/monocleOS/launcher.conf
-				pkill xlunch
-				monocleOS --launcher &
-			else
-				exit
-			fi
-		elif [[ $selection = "Vertical Icon Spacing" ]]; then
-			vSpacing=`zenity --scale --title="Vertical Icon Spacing" --text="Select vertical icon spacing" --min-value=20 --max-value=40 --value=30`
-			if [ $? = 0 ]; then
-				sed -i '/'gridVPadding='/s/.*/'gridVPadding=$vSpacing'/' /home/$USER/.config/monocleOS/launcher.conf
-				pkill xlunch
-				monocleOS --launcher &
-			else
-				exit
-			fi
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=300 --title "Settings - Personalisation" --list --column "Option" "Colours" "Light/Dark Theme" "Change your Wallpaper" "Status Bar" "Font Size" "Icon Size" "Vertical Icon Spacing"` || funcSettings
+        if [[ $selection = "Colours" ]]; then sudo /usr/bin/monocleOS --themeColour $USER # function requires current username passed to it as run with sudo. NOTE: $2 to call, $1 to function
+        elif [[ $selection = "Light/Dark Theme" ]]; then funcThemeGTK
+        elif [[ $selection = "Change your Wallpaper" ]]; then funcWallpaper
+        elif [[ $selection = "Status Bar" ]]; then funcStatusbar
+        elif [[ $selection = "Font Size" ]]; then
+            fontSize=`zenity --scale --title="Font Size" --text="Select a font size" --min-value=10 --max-value=16 --value=12`
+            if [ $? = 0 ]; then
+                sed -i '/'gridFontSize='/s/.*/'gridFontSize=$fontSize'/' /home/$USER/.config/monocleOS/launcher.conf
+                sed -i "s/font pango:DejaVu Sans.*/font pango:DejaVu Sans $fontSize/g" /home/$USER/.config/i3/config
+                sed -i '/'gtk-font-name='/s/.*/'gtk-font-name="Cantarell ${fontSize}"'/' /home/$USER/.gtkrc-2.0
+                sed -i "/gtk-font-name=/s/.*/gtk-font-name=Cantarell ${fontSize}/" /home/$USER/.config/gtk-3.0/settings.ini
+                pkill xlunch
+                i3 reload
+                monocleOS --launcher &
+            else
+                exit
+            fi
+        elif [[ $selection = "Icon Size" ]]; then
+            iconSize=`zenity --scale --title="Icon Size" --text="Select an icon size" --min-value=42 --max-value=72 --value=64`
+            if [ $? = 0 ]; then
+                sed -i '/'gridIconSize='/s/.*/'gridIconSize=$iconSize'/' /home/$USER/.config/monocleOS/launcher.conf
+                pkill xlunch
+                monocleOS --launcher &
+            else
+                exit
+            fi
+        elif [[ $selection = "Vertical Icon Spacing" ]]; then
+            vSpacing=`zenity --scale --title="Vertical Icon Spacing" --text="Select vertical icon spacing" --min-value=20 --max-value=40 --value=30`
+            if [ $? = 0 ]; then
+                sed -i '/'gridVPadding='/s/.*/'gridVPadding=$vSpacing'/' /home/$USER/.config/monocleOS/launcher.conf
+                pkill xlunch
+                monocleOS --launcher &
+            else
+                exit
+            fi
+        fi
+    done
 }
 
 function funcSettingsTips {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=250 --width=350 --title "Settings - Hints & Tips" --list --column "Option" "Enable/Disable Periodic Tips" "Change Frequency of Periodic Tips" "Enable/Disable Application-Specific Tips"` || funcSettings
-		if [[ $selection = "Enable/Disable Periodic Tips" ]]; then
-			enable=`zenity --title="Periodic Hints & Tips" --list --radiolist --column="Select" --column="Status" TRUE Enable FALSE Disable`
-			if [[ $enable = "Enable" ]]; then
-				sed -i '/'periodicTips='/s/.*/'periodicTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
-				pkill tips-service
-				nohup /usr/bin/tips-service --daemon &
-			elif [[ $enable = "Disable" ]]; then
-				sed -i '/'periodicTips='/s/.*/'periodicTips=0'/' /home/$USER/.config/monocleOS/tips-service.conf
-				pkill tips-service
-			fi
-		elif [[ $selection = "Change Frequency of Periodic Tips" ]]; then
-			frequency=`zenity --scale --title="Periodic Hints & Tips" --text="How often should a random tip be shown, in minutes?\nNOTE: Changing this value will enable Periodic Tips." --min-value=30 --max-value=240 --value=120`
-			if [ $? = 0 ]; then
-				sed -i '/'periodicTipsFreq='/s/.*/'periodicTipsFreq=$frequency'/' /home/$USER/.config/monocleOS/tips-service.conf
-				sed -i '/'periodicTips='/s/.*/'periodicTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
-				pkill tips-service
-				nohup /usr/bin/tips-service --daemon &
-			else
-				exit
-			fi
-		elif [[ $selection = "Enable/Disable Application-Specific Tips" ]]; then
-			enable=`zenity --title="Application Hints & Tips" --list --radiolist --column="Select" --column="Status" TRUE Enable FALSE Disable`
-			if [[ $enable = "Enable" ]]; then
-				sed -i '/'applicationTips='/s/.*/'applicationTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
-			elif [[ $enable = "Disable" ]]; then
-				sed -i '/'applicationTips='/s/.*/'applicationTips=0'/' /home/$USER/.config/monocleOS/tips-service.conf
-			fi
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=250 --width=350 --title "Settings - Hints & Tips" --list --column "Option" "Enable/Disable Periodic Tips" "Change Frequency of Periodic Tips" "Enable/Disable Application-Specific Tips"` || funcSettings
+        if [[ $selection = "Enable/Disable Periodic Tips" ]]; then
+            enable=`zenity --title="Periodic Hints & Tips" --list --radiolist --column="Select" --column="Status" TRUE Enable FALSE Disable`
+            if [[ $enable = "Enable" ]]; then
+                sed -i '/'periodicTips='/s/.*/'periodicTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
+                pkill tips-service
+                nohup /usr/bin/tips-service --daemon &
+            elif [[ $enable = "Disable" ]]; then
+                sed -i '/'periodicTips='/s/.*/'periodicTips=0'/' /home/$USER/.config/monocleOS/tips-service.conf
+                pkill tips-service
+            fi
+        elif [[ $selection = "Change Frequency of Periodic Tips" ]]; then
+            frequency=`zenity --scale --title="Periodic Hints & Tips" --text="How often should a random tip be shown, in minutes?\nNOTE: Changing this value will enable Periodic Tips." --min-value=30 --max-value=240 --value=120`
+            if [ $? = 0 ]; then
+                sed -i '/'periodicTipsFreq='/s/.*/'periodicTipsFreq=$frequency'/' /home/$USER/.config/monocleOS/tips-service.conf
+                sed -i '/'periodicTips='/s/.*/'periodicTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
+                pkill tips-service
+                nohup /usr/bin/tips-service --daemon &
+            else
+                exit
+            fi
+        elif [[ $selection = "Enable/Disable Application-Specific Tips" ]]; then
+            enable=`zenity --title="Application Hints & Tips" --list --radiolist --column="Select" --column="Status" TRUE Enable FALSE Disable`
+            if [[ $enable = "Enable" ]]; then
+                sed -i '/'applicationTips='/s/.*/'applicationTips=1'/' /home/$USER/.config/monocleOS/tips-service.conf
+            elif [[ $enable = "Disable" ]]; then
+                sed -i '/'applicationTips='/s/.*/'applicationTips=0'/' /home/$USER/.config/monocleOS/tips-service.conf
+            fi
+        fi
+    done
 }
 
 function funcStatusbar {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=300 --title "Settings - Status Bar" --list --column "Theme" "Compact" "Detailed"` || funcSettingsTheme
-		if [[ $selection = "Compact" ]]; then sed -i '/'statusbar='/s/.*/'statusbar=compact'/' /home/$USER/.config/monocleOS/launcher.conf
-		elif [[ $selection = "Detailed" ]]; then sed -i '/'statusbar='/s/.*/'statusbar=detailed'/' /home/$USER/.config/monocleOS/launcher.conf
-		fi
-		/usr/bin/polybar.sh
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=300 --title "Settings - Status Bar" --list --column "Theme" "Compact" "Detailed"` || funcSettingsTheme
+        if [[ $selection = "Compact" ]]; then sed -i '/'statusbar='/s/.*/'statusbar=compact'/' /home/$USER/.config/monocleOS/launcher.conf
+        elif [[ $selection = "Detailed" ]]; then sed -i '/'statusbar='/s/.*/'statusbar=detailed'/' /home/$USER/.config/monocleOS/launcher.conf
+        fi
+        /usr/bin/polybar.sh
+    done
 }
 
 function funcSuspend {
-	if pgrep update > /dev/null; then
-		zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically sleep when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then
-			while pgrep update > /dev/null; do
-				sleep 30
-			done
-			(
-			echo "0"; sleep 1
-			echo "# Sleeping in 9 seconds..."
-			echo "10"; sleep 1
-			echo "# Sleeping in 8 seconds..."
-			echo "20"; sleep 1
-			echo "# Sleeping in 7 seconds..."
-			echo "30"; sleep 1
-			echo "# Sleeping in 6 seconds..."
-			echo "40"; sleep 1
-			echo "# Sleeping in 5 seconds..."
-			echo "50"; sleep 1
-			echo "# Sleeping in 4 seconds..."
-			echo "60"; sleep 1
-			echo "# Sleeping in 3 seconds..."
-			echo "70"; sleep 1
-			echo "# Sleeping in 2 seconds..."
-			echo "80"; sleep 1
-			echo "# Sleeping in 1 second..."
-			echo "90"; sleep 1
-			echo "# Putting your PC to sleep..."; systemctl suspend
-			echo "100"; sleep 1
-			) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Sleeping in 10 seconds..." --percentage=0 --auto-close || exit
-		else
-			exit
-		fi
-	else
-		systemctl suspend
-	fi
+    if pgrep update > /dev/null; then
+        zenity --width 250 --question --title="System Updating..." --text "Your PC is currently updating... Would you like your PC to automatically sleep when finished?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then
+            while pgrep update > /dev/null; do
+                sleep 30
+            done
+            (
+            echo "0"; sleep 1
+            echo "# Sleeping in 9 seconds..."
+            echo "10"; sleep 1
+            echo "# Sleeping in 8 seconds..."
+            echo "20"; sleep 1
+            echo "# Sleeping in 7 seconds..."
+            echo "30"; sleep 1
+            echo "# Sleeping in 6 seconds..."
+            echo "40"; sleep 1
+            echo "# Sleeping in 5 seconds..."
+            echo "50"; sleep 1
+            echo "# Sleeping in 4 seconds..."
+            echo "60"; sleep 1
+            echo "# Sleeping in 3 seconds..."
+            echo "70"; sleep 1
+            echo "# Sleeping in 2 seconds..."
+            echo "80"; sleep 1
+            echo "# Sleeping in 1 second..."
+            echo "90"; sleep 1
+            echo "# Putting your PC to sleep..."; systemctl suspend
+            echo "100"; sleep 1
+            ) | zenity --width 300 --progress --title="Click Cancel to Continue Using your PC" --text="Sleeping in 10 seconds..." --percentage=0 --auto-close || exit
+        else
+            exit
+        fi
+    else
+        systemctl suspend
+    fi
 }
 
 function funcTaskMgr {
-	selection=`zenity --height=250 --title "Power Options" --list --column "Option" "Sleep" "Power Off" "Open System Monitor"` || exit
-	if [[ $selection = "Sleep" ]]; then funcSuspend
-	elif [[ $selection = "Power Off" ]]; then funcPoweroff
-	elif [[ $selection = "Open System Monitor" ]]; then exec gnome-system-monitor
-	fi
+    selection=`zenity --height=250 --title "Power Options" --list --column "Option" "Sleep" "Power Off" "Open System Monitor"` || exit
+    if [[ $selection = "Sleep" ]]; then funcSuspend
+    elif [[ $selection = "Power Off" ]]; then funcPoweroff
+    elif [[ $selection = "Open System Monitor" ]]; then exec gnome-system-monitor
+    fi
 }
 
 function funcThemeColour {
-	#### monocleOS Defaults ####
-	## Launcher Menu
-	# #0088CC{CC}
-	## Dunst
-	# #0088CC (Normal)
-	# #900000 (Urgent)
-	## i3
-	# #0088CC
-	# #900000 (Urgent)
-	## Arc GTK-2.0
-	# #5294e2
-	## Arc GTK-3.0
-	# #4DADD4
-	# #2E96C0
-	# #5294E2
-	# #2679DB
-	# #76C0DE (HL)
-	# #7EAFE9 (HL)
-	# #A9CAF1 (L)
-	# #B1CFF2 (L)
+    # == monocleOS Defaults ==
+    # Launcher Menu
+    # #0088CC{CC}
+    # Dunst
+    # #0088CC (Normal)
+    # #900000 (Urgent)
+    # i3
+    # #0088CC
+    # #900000 (Urgent)
+    # Arc GTK-2.0
+    # #5294e2
+    # Arc GTK-3.0
+    # #4DADD4
+    # #2E96C0
+    # #5294E2
+    # #2679DB
+    # #76C0DE (HL)
+    # #7EAFE9 (HL)
+    # #A9CAF1 (L)
+    # #B1CFF2 (L)
 
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=300 --title "Select a Colour" --list --column "Colour" "Default" "Blue" "Green" "Orange" "Pink" "Purple" "Red"` || exit
-		if [[ $selection = "Default" ]]; then
-			plymouthTheme="monocleOS"
-		elif [[ $selection = "Blue" ]]; then
-			plymouthTheme="monocleOS_blue"
-			mainColour="#0088CC"
-			highlightColour="#729FD5"
-			lightColour="#A9CAF1"
-		elif [[ $selection = "Green" ]]; then
-			plymouthTheme="monocleOS_green"
-			mainColour="#5BA611"
-			highlightColour="#7AE274"
-			lightColour="#A9F1CA"
-		elif [[ $selection = "Orange" ]]; then
-			plymouthTheme="monocleOS_orange"
-			mainColour="#D64937"
-			highlightColour="#F67997"
-			lightColour="#E699B7"
-		elif [[ $selection = "Pink" ]]; then
-			plymouthTheme="monocleOS_pink"
-			mainColour="#FF41FF"
-			highlightColour="#FF81FF"
-			lightColour="#FFC1FF"
-		elif [[ $selection = "Purple" ]]; then
-			plymouthTheme="monocleOS_purple"
-			mainColour="#8237D6"
-			highlightColour="#9277E6"
-			lightColour="#A287E6"
-		elif [[ $selection = "Red" ]]; then
-			plymouthTheme="monocleOS_red"
-			mainColour="#EF2929"
-			highlightColour="#F27174"
-			lightColour="#F1CACA"
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=300 --title "Select a Colour" --list --column "Colour" "Default" "Blue" "Green" "Orange" "Pink" "Purple" "Red"` || exit
+        if [[ $selection = "Default" ]]; then
+            plymouthTheme="monocleOS"
+        elif [[ $selection = "Blue" ]]; then
+            plymouthTheme="monocleOS_blue"
+            mainColour="#0088CC"
+            highlightColour="#729FD5"
+            lightColour="#A9CAF1"
+        elif [[ $selection = "Green" ]]; then
+            plymouthTheme="monocleOS_green"
+            mainColour="#5BA611"
+            highlightColour="#7AE274"
+            lightColour="#A9F1CA"
+        elif [[ $selection = "Orange" ]]; then
+            plymouthTheme="monocleOS_orange"
+            mainColour="#D64937"
+            highlightColour="#F67997"
+            lightColour="#E699B7"
+        elif [[ $selection = "Pink" ]]; then
+            plymouthTheme="monocleOS_pink"
+            mainColour="#FF41FF"
+            highlightColour="#FF81FF"
+            lightColour="#FFC1FF"
+        elif [[ $selection = "Purple" ]]; then
+            plymouthTheme="monocleOS_purple"
+            mainColour="#8237D6"
+            highlightColour="#9277E6"
+            lightColour="#A287E6"
+        elif [[ $selection = "Red" ]]; then
+            plymouthTheme="monocleOS_red"
+            mainColour="#EF2929"
+            highlightColour="#F27174"
+            lightColour="#F1CACA"
+        fi
+    done
 
-	# tmpdir=`mktemp -d` - using permanent directory for themeUpgrade.hook
-	cp /etc/monocleOS/dunstrc.skel /home/$1/.config/monocleOS/dunstrc
-	cp /etc/monocleOS/i3.conf.skel /home/$1/.config/monocleOS/i3.conf
-	cp /usr/share/themes/Arc/gtk-2.0/gtkrc.bk /home/$1/.config/monocleOS/arc_gtk2_gtkrc
-	cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk /home/$1/.config/monocleOS/arc_gtk3_gtk_gresource
-	cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk /home/$1/.config/monocleOS/arc_dark_gtk2_gtkrc
-	cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk /home/$1/.config/monocleOS/arc_dark_gtk3_gtk_gresource
+    # tmpdir=`mktemp -d` - using permanent directory for themeUpgrade.hook
+    cp /etc/monocleOS/dunstrc.skel /home/$1/.config/monocleOS/dunstrc
+    cp /etc/monocleOS/i3.conf.skel /home/$1/.config/monocleOS/i3.conf
+    cp /usr/share/themes/Arc/gtk-2.0/gtkrc.bk /home/$1/.config/monocleOS/arc_gtk2_gtkrc
+    cp /usr/share/themes/Arc/gtk-3.0/gtk.gresource.bk /home/$1/.config/monocleOS/arc_gtk3_gtk_gresource
+    cp /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc.bk /home/$1/.config/monocleOS/arc_dark_gtk2_gtkrc
+    cp /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource.bk /home/$1/.config/monocleOS/arc_dark_gtk3_gtk_gresource
 
-	if [[ $selection != "Default" ]]; then
-		cd /home/$1/.config/monocleOS
-		sed -i '/'menuBG='/s/.*/'menuBG=${mainColour}CC'/' launcher.conf
-		sed -i 's/#0088CC/'$mainColour'/gI' dunstrc
-		sed -i 's/#0088CC/'$mainColour'/gI' i3.conf
-		for file in *gtkrc; do
-			sed -i 's/#5294e2/'$mainColour'/gI' $file
-		done
-		for file in *gresource; do
-			sed -i 's/#4DADD4/'$mainColour'/gI' $file
-			sed -i 's/#2E96C0/'$mainColour'/gI' $file
-			sed -i 's/#5294E2/'$mainColour'/gI' $file
-			sed -i 's/#2679DB/'$mainColour'/gI' $file
-			sed -i 's/#76C0DE/'$highlightColour'/gI' $file
-			sed -i 's/#7EAFE9/'$highlightColour'/gI' $file
-			sed -i 's/#A9CAF1/'$lightColour'/gI' $file
-			sed -i 's/#B1CFF2/'$lightColour'/gI' $file
-		done
-	else
-		cd /home/$1/.config/monocleOS
-		sed -i '/'menuBG='/s/.*/'menuBG=#0088CCCC'/' launcher.conf
-	fi
+    if [[ $selection != "Default" ]]; then
+        cd /home/$1/.config/monocleOS
+        sed -i '/'menuBG='/s/.*/'menuBG=${mainColour}CC'/' launcher.conf
+        sed -i 's/#0088CC/'$mainColour'/gI' dunstrc
+        sed -i 's/#0088CC/'$mainColour'/gI' i3.conf
+        for file in *gtkrc; do
+            sed -i 's/#5294e2/'$mainColour'/gI' $file
+        done
+        for file in *gresource; do
+            sed -i 's/#4DADD4/'$mainColour'/gI' $file
+            sed -i 's/#2E96C0/'$mainColour'/gI' $file
+            sed -i 's/#5294E2/'$mainColour'/gI' $file
+            sed -i 's/#2679DB/'$mainColour'/gI' $file
+            sed -i 's/#76C0DE/'$highlightColour'/gI' $file
+            sed -i 's/#7EAFE9/'$highlightColour'/gI' $file
+            sed -i 's/#A9CAF1/'$lightColour'/gI' $file
+            sed -i 's/#B1CFF2/'$lightColour'/gI' $file
+        done
+    else
+        cd /home/$1/.config/monocleOS
+        sed -i '/'menuBG='/s/.*/'menuBG=#0088CCCC'/' launcher.conf
+    fi
 
-	# Apply
-	# NOTE: as GTK changes appear immediately, the success dialogue has the original i3 border, with the new GTK colour theme. Move the 'cp's to after this dialogue in order to fix this
-	(
-	echo "12"; sleep 5
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/dunstrc /home/$1/.config/dunst/dunstrc
-	echo "24"; sleep 1
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/i3.conf /home/$1/.config/i3/config
-	echo "36"; sleep 1
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_gtk2_gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc
-	echo "48"; sleep 1
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_gtk3_gtk_gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource
-	echo "60"; sleep 1
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_dark_gtk2_gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc
-	echo "72"; sleep 1
-	echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_dark_gtk3_gtk_gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource
-	echo "84"; sleep 1
-	echo "# Applying new power-on screen..."; plymouth-set-default-theme -R $plymouthTheme || { zenity --width 200 --error --title="Changing Colour Theme Failed" --text="Something went wrong. Your PC may not be able to boot correctly. Please contact your system administrator."; exit 1; }
-	echo "100"; sleep 1
-	zenity --width 200 --info --title="Colour Theme Changed" --text="Success! Your colour theme has been changed."
-	pkill x
-	) | zenity --width 200 --progress --title="Changing Colour Theme" --text="This process may take approximately one minute... Please do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
+    # Apply
+    # NOTE: as GTK changes appear immediately, the success dialogue has the original i3 border, with the new GTK colour theme. Move the 'cp's to after this dialogue in order to fix this
+    (
+    echo "12"; sleep 5
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/dunstrc /home/$1/.config/dunst/dunstrc
+    echo "24"; sleep 1
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/i3.conf /home/$1/.config/i3/config
+    echo "36"; sleep 1
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_gtk2_gtkrc /usr/share/themes/Arc/gtk-2.0/gtkrc
+    echo "48"; sleep 1
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_gtk3_gtk_gresource /usr/share/themes/Arc/gtk-3.0/gtk.gresource
+    echo "60"; sleep 1
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_dark_gtk2_gtkrc /usr/share/themes/Arc-Dark/gtk-2.0/gtkrc
+    echo "72"; sleep 1
+    echo "# Applying new theme..."; cp /home/$1/.config/monocleOS/arc_dark_gtk3_gtk_gresource /usr/share/themes/Arc-Dark/gtk-3.0/gtk.gresource
+    echo "84"; sleep 1
+    echo "# Applying new power-on screen..."; plymouth-set-default-theme -R $plymouthTheme || { zenity --width 200 --error --title="Changing Colour Theme Failed" --text="Something went wrong. Your PC may not be able to boot correctly. Please contact your system administrator."; exit 1; }
+    echo "100"; sleep 1
+    zenity --width 200 --info --title="Colour Theme Changed" --text="Success! Your colour theme has been changed."
+    pkill x
+    ) | zenity --width 200 --progress --title="Changing Colour Theme" --text="This process may take approximately one minute... Please do NOT turn off your PC." --percentage=0 --auto-close --no-cancel
 }
 
 function funcThemeGTK {
-	grep "Arc-Dark" /home/$USER/.config/gtk-3.0/settings.ini
-	if [ $? = 0 ]; then 
-		zenity --width 200 --question --title="Change Theme" --text "Do you want to change to a light theme? This will close all applications." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then
-			sed -i '/Inherits=Breeze/s/.*/Inherits=Breeze_Snow/' /home/$USER/.icons/default/index.theme
-			sed -i '/gtk-theme-name=Arc-Dark/s/.*/gtk-theme-name=Arc/' /home/$USER/.config/gtk-3.0/settings.ini
-			sed -i '/gtk-theme-name="Arc-Dark"/s/.*/gtk-theme-name="Arc"/' /home/$USER/.gtkrc-2.0
-			pkill x
-		else
-			exit
-		fi
-	else
-		zenity --width 200 --question --title="Change Theme" --text "Do you want to change to a dark theme? This will close all applications." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
-		if [ $? = 0 ]; then
-			sed -i '/Inherits=Breeze_Snow/s/.*/Inherits=Breeze/' /home/$USER/.icons/default/index.theme
-			sed -i '/gtk-theme-name=Arc/s/.*/gtk-theme-name=Arc-Dark/' /home/$USER/.config/gtk-3.0/settings.ini
-			sed -i '/gtk-theme-name="Arc"/s/.*/gtk-theme-name="Arc-Dark"/' /home/$USER/.gtkrc-2.0
-			pkill x
-		else
-			exit
-		fi
-	fi
+    grep "Arc-Dark" /home/$USER/.config/gtk-3.0/settings.ini
+    if [ $? = 0 ]; then 
+        zenity --width 200 --question --title="Change Theme" --text "Do you want to change to a light theme? This will close all applications." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then
+            sed -i '/Inherits=Breeze/s/.*/Inherits=Breeze_Snow/' /home/$USER/.icons/default/index.theme
+            sed -i '/gtk-theme-name=Arc-Dark/s/.*/gtk-theme-name=Arc/' /home/$USER/.config/gtk-3.0/settings.ini
+            sed -i '/gtk-theme-name="Arc-Dark"/s/.*/gtk-theme-name="Arc"/' /home/$USER/.gtkrc-2.0
+            pkill x
+        else
+            exit
+        fi
+    else
+        zenity --width 200 --question --title="Change Theme" --text "Do you want to change to a dark theme? This will close all applications." --ok-label="Yes" --cancel-label="No" # Yes=0, No=1
+        if [ $? = 0 ]; then
+            sed -i '/Inherits=Breeze_Snow/s/.*/Inherits=Breeze/' /home/$USER/.icons/default/index.theme
+            sed -i '/gtk-theme-name=Arc/s/.*/gtk-theme-name=Arc-Dark/' /home/$USER/.config/gtk-3.0/settings.ini
+            sed -i '/gtk-theme-name="Arc"/s/.*/gtk-theme-name="Arc-Dark"/' /home/$USER/.gtkrc-2.0
+            pkill x
+        else
+            exit
+        fi
+    fi
 }
 
 function funcUpdateStop {
-	while pgrep update > /dev/null; do
-		pkill -2 update
-		(
-		echo "0"; sleep 2
-		echo "# Waiting for automatic updates to stop.."
-		echo "10"; sleep 2
-		echo "# Waiting for automatic updates to stop..."
-		echo "20"; sleep 2
-		echo "# Waiting for automatic updates to stop."
-		echo "30"; sleep 2
-		echo "# Waiting for automatic updates to stop.."
-		echo "40"; sleep 2
-		echo "# Waiting for automatic updates to stop..."
-		echo "50"; sleep 2
-		echo "# Waiting for automatic updates to stop."
-		echo "60"; sleep 2
-		echo "# Waiting for automatic updates to stop.."
-		echo "70"; sleep 2
-		echo "# Waiting for automatic updates to stop..."
-		echo "80"; sleep 2
-		echo "# Waiting for automatic updates to stop."
-		echo "90"; sleep 2
-		echo "# Waiting for automatic updates to stop.."
-		echo "100"; sleep 2
-		) | zenity --width 300 --progress --title="Stopping Updates" --text="Waiting for automatic updates to stop." --percentage=0 --auto-close || exit 1
-	done
+    while pgrep update > /dev/null; do
+        pkill -2 update
+        (
+        echo "0"; sleep 2
+        echo "# Waiting for automatic updates to stop.."
+        echo "10"; sleep 2
+        echo "# Waiting for automatic updates to stop..."
+        echo "20"; sleep 2
+        echo "# Waiting for automatic updates to stop."
+        echo "30"; sleep 2
+        echo "# Waiting for automatic updates to stop.."
+        echo "40"; sleep 2
+        echo "# Waiting for automatic updates to stop..."
+        echo "50"; sleep 2
+        echo "# Waiting for automatic updates to stop."
+        echo "60"; sleep 2
+        echo "# Waiting for automatic updates to stop.."
+        echo "70"; sleep 2
+        echo "# Waiting for automatic updates to stop..."
+        echo "80"; sleep 2
+        echo "# Waiting for automatic updates to stop."
+        echo "90"; sleep 2
+        echo "# Waiting for automatic updates to stop.."
+        echo "100"; sleep 2
+        ) | zenity --width 300 --progress --title="Stopping Updates" --text="Waiting for automatic updates to stop." --percentage=0 --auto-close || exit 1
+    done
 }
 
 function funcWallpaper {
-	restartLauncher=0
-	loop=1
-	cp ~/.wallpaper.png ~/.wallpaper.png.bak
-	while [ $loop = 1 ]; do # While not confirmed, keep asking for wallpaper or until cancelled
-		wallpaper=`zenity --file-selection --title="Select a Wallpaper" --filename=/usr/share/backgrounds/`
-		if [ $? = 0 ]; then
-			cp $wallpaper ~/.wallpaper.png # <-- All files in /usr/share/backgrounds must be PNG for xlunch
-			restartLauncher=1 # Only restart launcher when necessary
-			feh --bg-fill --no-xinerama /home/$USER/.wallpaper.png
-			pkill xlunch
-			zenity --width 200 --question --title="Change Wallpaper" --text "Select this wallpaper?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1, doesn't write to named variable'
-			if [ $? = 0 ]; then
-				loop=0
-				rm ~/.wallpaper.png.bak
-				monocleOS --launcher &
-				exit
-			elif [ $? = 1 ]; then loop=1; fi
-		else
-			# If cancelled, revert wallpaper in case it was ever changed and delete backup
-			cp ~/.wallpaper.png.bak ~/.wallpaper.png
-			rm ~/.wallpaper.png.bak
-			if [ $restartLauncher = 1 ]; then
-				feh --bg-fill --no-xinerama /home/$USER/.wallpaper.png
-				monocleOS --launcher &
-			fi
-			exit
-		fi
-	done
+    restartLauncher=0
+    loop=1
+    cp ~/.wallpaper.png ~/.wallpaper.png.bak
+    while [ $loop = 1 ]; do # While not confirmed, keep asking for wallpaper or until cancelled
+        wallpaper=`zenity --file-selection --title="Select a Wallpaper" --filename=/usr/share/backgrounds/`
+        if [ $? = 0 ]; then
+            cp $wallpaper ~/.wallpaper.png # <-- All files in /usr/share/backgrounds must be PNG for xlunch
+            restartLauncher=1 # Only restart launcher when necessary
+            feh --bg-fill --no-xinerama /home/$USER/.wallpaper.png
+            pkill xlunch
+            zenity --width 200 --question --title="Change Wallpaper" --text "Select this wallpaper?" --ok-label="Yes" --cancel-label="No" # Yes=0, No=1, doesn't write to named variable'
+            if [ $? = 0 ]; then
+                loop=0
+                rm ~/.wallpaper.png.bak
+                monocleOS --launcher &
+                exit
+            elif [ $? = 1 ]; then loop=1; fi
+        else
+            # If cancelled, revert wallpaper in case it was ever changed and delete backup
+            cp ~/.wallpaper.png.bak ~/.wallpaper.png
+            rm ~/.wallpaper.png.bak
+            if [ $restartLauncher = 1 ]; then
+                feh --bg-fill --no-xinerama /home/$USER/.wallpaper.png
+                monocleOS --launcher &
+            fi
+            exit
+        fi
+    done
 }
 
 function funcWifi {
-	# https://askubuntu.com/questions/461825/how-to-connect-to-wifi-from-the-command-line
+    # https://askubuntu.com/questions/461825/how-to-connect-to-wifi-from-the-command-line
 
-	#ifname="wlan0"
-	connected=0
-	private="no"
-	hidden="no"
+    #ifname="wlan0"
+    connected=0
+    private="no"
+    hidden="no"
 
-	nmcli radio wifi on
-	list=`nmcli -g "SSID" d wifi list`
-	if [[ $list = "" ]]; then zenity --width=200 --error --text="Couldn't find any WiFi networks. Is the WiFi  switch on your device turned on?"; exit; fi # Print dialogue and exit if no WiFi networks found
+    nmcli radio wifi on
+    list=`nmcli -g "SSID" d wifi list`
+    if [[ $list = "" ]]; then zenity --width=200 --error --text="Couldn't find any WiFi networks. Is the WiFi  switch on your device turned on?"; exit; fi # Print dialogue and exit if no WiFi networks found
 
-	# Print each line individually for zenity --list
-	ssid=`for line in $list; do
-		echo $line
-	done | zenity --height=300 --title "Network Name" --list --column "Network Name"` || exit
+    # Print each line individually for zenity --list
+    ssid=`for line in $list; do
+        echo $line
+    done | zenity --height=300 --title "Network Name" --list --column "Network Name"` || exit
 
-	#ssid=`zenity --title "Network Name" --entry --text "SSID\n$list\n\nEnter SSID Name"` # Manual Text Entry
+    #ssid=`zenity --title "Network Name" --entry --text "SSID\n$list\n\nEnter SSID Name"` # Manual Text Entry
 
-	# man nmcli: wifi connect (B)SSID [password password] [wep-key-type {key | phrase}] [ifname ifname] [bssid BSSID] [name name] [private {yes | no}] [hidden {yes | no}]
-	# Could rely on nm-applet to enter password here, but would need to be installed and running
-	# Not specifying interface to let NM decide. $private and $hidden are set to default
-	while [ $connected = 0 ]; do
-		pw=`zenity --width 200 --title "Password" --password` || exit
-		(
-		echo "33"; sleep 1
-		echo "# Please wait..."; nmcli d wifi connect $ssid password $pw private $private hidden $hidden
-		echo "66"; sleep 1
-		echo "# Please wait..."
-		echo "100"; sleep 1
-		) | zenity --width 200 --progress --title="Connecting to $ssid..." --text="Please wait..." --percentage=0 --auto-close --no-cancel
-		nmcli -g "CONNECTION" device status | grep "$ssid"
-		if [ $? = 0 ]; then
-			connected=1
-			zenity --width 200 --info --title="Connecting to $ssid..." --text="Connected to $ssid successfully."
-			exit
-		else
-			zenity --width=200 --error --title="Unable to Connect to $ssid" --text="Check the password and try again."
-			nmcli connection delete $ssid
-		fi
-	done
+    # man nmcli: wifi connect (B)SSID [password password] [wep-key-type {key | phrase}] [ifname ifname] [bssid BSSID] [name name] [private {yes | no}] [hidden {yes | no}]
+    # Could rely on nm-applet to enter password here, but would need to be installed and running
+    # Not specifying interface to let NM decide. $private and $hidden are set to default
+    while [ $connected = 0 ]; do
+        pw=`zenity --width 200 --title "Password" --password` || exit
+        (
+        echo "33"; sleep 1
+        echo "# Please wait..."; nmcli d wifi connect $ssid password $pw private $private hidden $hidden
+        echo "66"; sleep 1
+        echo "# Please wait..."
+        echo "100"; sleep 1
+        ) | zenity --width 200 --progress --title="Connecting to $ssid..." --text="Please wait..." --percentage=0 --auto-close --no-cancel
+        nmcli -g "CONNECTION" device status | grep "$ssid"
+        if [ $? = 0 ]; then
+            connected=1
+            zenity --width 200 --info --title="Connecting to $ssid..." --text="Connected to $ssid successfully."
+            exit
+        else
+            zenity --width=200 --error --title="Unable to Connect to $ssid" --text="Check the password and try again."
+            nmcli connection delete $ssid
+        fi
+    done
 }
 
 function funcWine {
-	selection=""
-	while [[ $selection = "" ]]; do
-		selection=`zenity --height=250 --width=250 --title "Wine Settings" --list --column "Option" "Add a Windows Application" "Execute a Windows Application" "Open Desktop Folder" "Configure Wine"` || funcSettingsAdvanced # Hardcoded to return to settings. Change this before calling funcWine from anywhere else
-		if [[ $selection = "Add a Windows Application" ]]; then
-			file=`zenity --file-selection --title="Select a Windows Application" --filename=/home/$USER/` || funcWine
-			name=`zenity --width=200 --title="Enter a Name for $file" --entry --text="Enter a friendly name for $file." --entry-text="e.g. Calculator"` || funcWine
-			if [ $? = 0 ]; then
-				[[ -d "/home/$USER/Desktop/Windows Applications" ]] || mkdir "/home/$USER/Desktop/Windows Applications"
-				echo -e "[Desktop Entry]\nType=Application\nVersion=1.0\nName=$name\nComment=A Windows Application\nExec=wine "$file"\nIcon=/usr/share/xlunch/icons/numix/distributor-logo-windows.png\nTerminal=false" > "/home/$USER/Desktop/Windows Applications/$name.desktop"
-				chmod +x "/home/$USER/Desktop/Windows Applications/$name.desktop"
-				if [ $? = 0 ]; then zenity --width 200 --info --title="Created Shortcut" --text="Connected a shortcut for $file in your Desktop folder."; fi
-			fi
-		elif [[ $selection = "Execute a Windows Application" ]]; then
-			file=`zenity --file-selection --title="Select a Windows Application" --filename=/home/$USER/` || funcWine
-			if [ $? = 0 ]; then wine "$file"; fi
-		elif [[ $selection = "Open Desktop Folder" ]]; then exec thunar "/home/$USER/Desktop/Windows Applications"
-		elif [[ $selection = "Configure Wine" ]]; then exec winetricks
-		fi
-	done
+    selection=""
+    while [[ $selection = "" ]]; do
+        selection=`zenity --height=250 --width=250 --title "Wine Settings" --list --column "Option" "Add a Windows Application" "Execute a Windows Application" "Open Desktop Folder" "Configure Wine"` || funcSettingsAdvanced # Hardcoded to return to settings. Change this before calling funcWine from anywhere else
+        if [[ $selection = "Add a Windows Application" ]]; then
+            file=`zenity --file-selection --title="Select a Windows Application" --filename=/home/$USER/` || funcWine
+            name=`zenity --width=200 --title="Enter a Name for $file" --entry --text="Enter a friendly name for $file." --entry-text="e.g. Calculator"` || funcWine
+            if [ $? = 0 ]; then
+                [[ -d "/home/$USER/Desktop/Windows Applications" ]] || mkdir "/home/$USER/Desktop/Windows Applications"
+                echo -e "[Desktop Entry]\nType=Application\nVersion=1.0\nName=$name\nComment=A Windows Application\nExec=wine "$file"\nIcon=/usr/share/xlunch/icons/numix/distributor-logo-windows.png\nTerminal=false" > "/home/$USER/Desktop/Windows Applications/$name.desktop"
+                chmod +x "/home/$USER/Desktop/Windows Applications/$name.desktop"
+                if [ $? = 0 ]; then zenity --width 200 --info --title="Created Shortcut" --text="Connected a shortcut for $file in your Desktop folder."; fi
+            fi
+        elif [[ $selection = "Execute a Windows Application" ]]; then
+            file=`zenity --file-selection --title="Select a Windows Application" --filename=/home/$USER/` || funcWine
+            if [ $? = 0 ]; then wine "$file"; fi
+        elif [[ $selection = "Open Desktop Folder" ]]; then exec thunar "/home/$USER/Desktop/Windows Applications"
+        elif [[ $selection = "Configure Wine" ]]; then exec winetricks
+        fi
+    done
 }
 
 case "$1" in
-	--close)
-		funcClose
-		;;
-	--closeAll)
-		funcCloseAll
-		;;
-	--freeSpaceCheck)
-		funcFreeSpaceCheck $2
-		;;
-	--games)
-		funcGames
-		;;
-	--icon)
-		funcIcon
-		;;
-	--internetCheck)
-		funcInternetCheck
-		;;
-	--internetCheckNoX)
-		funcInternetCheckNoX $2
-		;;
-	--launcher)
-		funcLauncher
-		;;
-	--launcherSearch)
-		funcLauncherSearch
-		;;
-	--launcherMenu)
-		funcLauncherMenu
-		;;
-	--lock)
-		funcLock
-		;;
-	--magnifier)
-		funcMagnifier
-		;;
-	--password)
-		funcPassword
-		;;
-	--poweroff)
-		funcPoweroff
-		;;
-	--reboot)
-		funcReboot
-		;;
-	--recovery)
-		funcRecovery
-		;;
-	--recoveryInstall)
-		funcRecoveryInstall
-		;;
-	--recoveryKey)
-		funcRecoveryKey
-		;;
-	--recoveryPassword)
-		funcRecoveryPassword
-		;;
-	--recoveryReset)
-		funcRecoveryFactory
-		;;
-	--recoveryUpdate)
-		funcRecoveryUpdate
-		;;
-	--screenshot)
-		funcScreenshot
-		;;
-	--settings)
-		funcSettings
-		;;
-	--suspend)
-		funcSuspend
-		;;
-	--taskMgr)
-		funcTaskMgr
-		;;
-	--themeColour)
-		funcThemeColour $2
-		;;
-	--themeGTK)
-		funcThemeGTK
-		;;
-	--updateStop)
-		funcUpdateStop
-		;;
-	--wallpaper)
-		funcWallpaper
-		;;
-	--wifi)
-		funcWifi
-		;;
-	--wine)
-		funcWine
-		;;
-	*)
-		echo $"Usage: $0 close{All}|freeSpaceCheck|games|icon|internetCheck{NoX}|launcher{Menu|Search}|lock|magnifier|password|poweroff|reboot|recovery{Install|Key|Password|Reset|Update}|screenshot|settings|suspend|taskMgr|theme{Colour|GTK}|updateStop|wallpaper|wifi|wine"
-		exit 1
+    --close)
+        funcClose
+        ;;
+    --closeAll)
+        funcCloseAll
+        ;;
+    --freeSpaceCheck)
+        funcFreeSpaceCheck $2
+        ;;
+    --games)
+        funcGames
+        ;;
+    --icon)
+        funcIcon
+        ;;
+    --internetCheck)
+        funcInternetCheck
+        ;;
+    --internetCheckNoX)
+        funcInternetCheckNoX $2
+        ;;
+    --launcher)
+        funcLauncher
+        ;;
+    --launcherSearch)
+        funcLauncherSearch
+        ;;
+    --launcherMenu)
+        funcLauncherMenu
+        ;;
+    --lock)
+        funcLock
+        ;;
+    --magnifier)
+        funcMagnifier
+        ;;
+    --password)
+        funcPassword
+        ;;
+    --poweroff)
+        funcPoweroff
+        ;;
+    --reboot)
+        funcReboot
+        ;;
+    --recovery)
+        funcRecovery
+        ;;
+    --recoveryInstall)
+        funcRecoveryInstall
+        ;;
+    --recoveryKey)
+        funcRecoveryKey
+        ;;
+    --recoveryPassword)
+        funcRecoveryPassword
+        ;;
+    --recoveryReset)
+        funcRecoveryFactory
+        ;;
+    --recoveryUpdate)
+        funcRecoveryUpdate
+        ;;
+    --screenshot)
+        funcScreenshot
+        ;;
+    --settings)
+        funcSettings
+        ;;
+    --suspend)
+        funcSuspend
+        ;;
+    --taskMgr)
+        funcTaskMgr
+        ;;
+    --themeColour)
+        funcThemeColour $2
+        ;;
+    --themeGTK)
+        funcThemeGTK
+        ;;
+    --updateStop)
+        funcUpdateStop
+        ;;
+    --wallpaper)
+        funcWallpaper
+        ;;
+    --wifi)
+        funcWifi
+        ;;
+    --wine)
+        funcWine
+        ;;
+    *)
+        echo $"Usage: $0 close{All}|freeSpaceCheck|games|icon|internetCheck{NoX}|launcher{Menu|Search}|lock|magnifier|password|poweroff|reboot|recovery{Install|Key|Password|Reset|Update}|screenshot|settings|suspend|taskMgr|theme{Colour|GTK}|updateStop|wallpaper|wifi|wine"
+        exit 1
 esac

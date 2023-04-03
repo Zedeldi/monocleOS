@@ -8,10 +8,10 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 0.25; done
 
 # Launch Polybar, using default config location ~/.config/polybar/config
 if [[ -e /home/$USER/.firstBoot ]]; then
-	exit
+    exit
 else
-	if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then statusbar=compact
-	else source /home/$USER/.config/monocleOS/launcher.conf; fi
-	polybar $statusbar &
-	echo "Polybar ($statusbar) launched..."
+    if [[ ! -f /home/$USER/.config/monocleOS/launcher.conf ]]; then statusbar=compact
+    else source /home/$USER/.config/monocleOS/launcher.conf; fi
+    polybar $statusbar &
+    echo "Polybar ($statusbar) launched..."
 fi

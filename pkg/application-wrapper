@@ -4,87 +4,87 @@ wait=2
 
 app="${1,,}"
 case "$app" in
-	calculator)
-		/usr/bin/gnome-calculator &
-		;;
-	calendar)
-		/usr/bin/gnome-calendar &
-		;;
-	camera)
-		/usr/bin/cheese &
-		;;
-	cards)
-		/usr/bin/sol &
-		;;
-	chess)
-		/usr/bin/gnome-chess &
-		;;
-	email)
-		/usr/bin/evolution &
-		;;
-	files)
-		/usr/bin/thunar &
-		;;
-	four_in_a_row)
-		/usr/bin/four-in-a-row &
-		;;
-	games)
-		/usr/bin/monocleOS --games &
-		;;
-	lock)
-		/usr/bin/monocleOS --lock &
-		;;
-	magnifier)
-		/usr/bin/monocleOS --magnifier &
-		sleep $wait
-		/usr/bin/tips-service --app magnifier
-		;;
-	mahjongg)
-		/usr/bin/gnome-mahjongg &
-		;;
-	media_player)
-		/usr/bin/vlc &
-		;;
-	mines)
-		/usr/bin/gnome-mines &
-		;;
-	office)
-		/usr/bin/libreoffice &
-		sleep $wait
-		/usr/bin/tips-service --app office
-		;;
-	osk)
-		/usr/bin/onboard &
-		;;
-	quadrapassel)
-		/usr/bin/quadrapassel &
-		;;
-	reversi)
-		/usr/bin/iagno &
-		;;
-	screenshot)
-		/usr/bin/monocleOS --screenshot &
-		;;
-	settings)
-		/usr/bin/monocleOS --settings &
-		sleep $wait
-		/usr/bin/tips-service --app settings
-		;;
-	sleep)
-		/usr/bin/monocleOS --suspend &
-		;;
-	sudoku)
-		/usr/bin/gnome-sudoku &
-		;;
-	turn_off)
-		/usr/bin/monocleOS --poweroff &
-		;;
-	web)
-		/usr/bin/epiphany &
-		sleep $wait
-		/usr/bin/tips-service --app web
-		;;
-	*)
-		echo $"Usage: $0 {APP}"
-		exit 1
+    calculator)
+        /usr/bin/gnome-calculator &
+        ;;
+    calendar)
+        /usr/bin/gnome-calendar &
+        ;;
+    camera)
+        /usr/bin/cheese &
+        ;;
+    cards)
+        /usr/bin/sol &
+        ;;
+    chess)
+        /usr/bin/gnome-chess &
+        ;;
+    email)
+        /usr/bin/evolution &
+        ;;
+    files)
+        /usr/bin/thunar &
+        ;;
+    four_in_a_row)
+        /usr/bin/four-in-a-row &
+        ;;
+    games)
+        /usr/bin/monocleOS --games &
+        ;;
+    lock)
+        /usr/bin/monocleOS --lock &
+        ;;
+    magnifier)
+        /usr/bin/monocleOS --magnifier &
+        sleep $wait
+        /usr/bin/tips-service --app magnifier
+        ;;
+    mahjongg)
+        /usr/bin/gnome-mahjongg &
+        ;;
+    media_player)
+        /usr/bin/vlc &
+        ;;
+    mines)
+        /usr/bin/gnome-mines &
+        ;;
+    office)
+        /usr/bin/libreoffice &
+        sleep $wait
+        /usr/bin/tips-service --app office
+        ;;
+    osk)
+        /usr/bin/onboard &
+        ;;
+    quadrapassel)
+        /usr/bin/quadrapassel &
+        ;;
+    reversi)
+        /usr/bin/iagno &
+        ;;
+    screenshot)
+        /usr/bin/monocleOS --screenshot &
+        ;;
+    settings)
+        /usr/bin/monocleOS --settings &
+        sleep $wait
+        /usr/bin/tips-service --app settings
+        ;;
+    sleep)
+        /usr/bin/monocleOS --suspend &
+        ;;
+    sudoku)
+        /usr/bin/gnome-sudoku &
+        ;;
+    turn_off)
+        /usr/bin/monocleOS --poweroff &
+        ;;
+    web)
+        /usr/bin/epiphany &
+        sleep $wait
+        /usr/bin/tips-service --app web
+        ;;
+    *)
+        echo $"Usage: $0 {APP}"
+        exit 1
 esac
