@@ -42,16 +42,18 @@ function funcCloseAll {
     fi
 }
 
-# NOT IMPLEMENTED YET! Function to keep all error messages uniformed and relative to an error code. Pass to function with funcError [error].
+# Not implemented.
+# Keep all error messages uniformed and relative to an error code.
+# Pass to function with funcError <error>
 #function funcError {
-#	case "$1" in
-#		021357)
-#			zenity --width=200 --error --title="" --text="Error code: $1"
-#			;;
-#		*)
-#			echo $"Usage: $0 {Error}"
-#			exit 1
-#	esac
+#    case "$1" in
+#        021357)
+#            zenity --width=200 --error --title="" --text="Error code: $1"
+#            ;;
+#        *)
+#            echo $"Usage: $0 {Error}"
+#            exit 1
+#    esac
 #}
 
 function funcFreeSpaceCheck {

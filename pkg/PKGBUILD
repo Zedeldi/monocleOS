@@ -15,10 +15,10 @@ conflicts=('monocleos' 'xlunch-git')
 source=('xlunch_precompiled' 'xlunch_menu_precompiled' 'monocleOS' 'monocleOS-recovery' 'update' 'initMonocle' 'toggleTouchpad.sh' 'entries.dsv.skel' 'dunstrc' 'i3.conf' 'polybar.conf' 'polybar.sh' 'bash_profile' 'xinitrc' 'icons.default' 'gtkSettings.ini' 'gtkrc' 'Trolltech.conf' 'pam_environment' 'autologin.conf' 'grubUpgrade.hook' 'mirrorUpgrade.hook' 'themeUpgrade.hook' 'nvidia.hook' '40-libinput.conf' '50-lockdown.conf' 'clamd.conf' 'nsswitch.conf' 'os-release' 'grub' 'launcher.conf' 'application-wrapper' 'tips-service' 'tips-service.conf' 'automatic-update.service' 'automatic-update.timer' 'clamav-scan.service' 'clamav-scan.timer' 'onboard.theme')
 sha256sums=('4e578283544c131cc3089eddda912d7013dda7ea49b1375fe40b73fb9ffd17d9'
             'd8c2ac853a530e6e049f12da497de4232db8887633748158944bd2f6b601308c'
-            'bc302f3568a93bc2a313d1ad1790ec36f39a7e6a8238f4de3740b6be6ab44489'
-            '1ab7637ea57a63441a2840b28d32a38da2bcd650b9215c7cdec5f274f4c7eb5e'
+            'ae6698a0f689f2910ccaba258b44e382115697d525605d376921dba032d96996'
+            '514623370b3efc5460b29c2e09457077c5284330fb174d840df8848f1418f650'
             '0fdccce507fcefba629561625eb7172e5beb7e4576419c049c499e5960d5c874'
-            'f4657a5a0b263f5acba618cad7cf128f8c863e3144baa5b60ca36ac874fa5c2b'
+            '3a04bf764972f6d29a6908498a2fae0cb9d3ece66a248c79cea447491c0a0a3f'
             'd1ad17c0b9c5848c16c81ceadc6883298c0841a3bbd28ab1d783eb01ea4470a7'
             'b25e3f34fb820e3852770b975c5f308ebc46b70d89e830da778ca7653f028677'
             'adc0d2a470f0f299a0aea22b0d69cd3faf3272e11b202db88b9e27037987bfe9'

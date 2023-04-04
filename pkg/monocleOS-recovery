@@ -33,9 +33,9 @@ function funcResetFormat {
     shred -zu /etc/NetworkManager/system-connections/* # shred in case of saved private network connection data
     hostname="monocleOS-$(cat /dev/urandom | tr -dc '0-9A-Z' | fold -w 4 | head -n 1)"
     echo "$hostname" > /etc/hostname
-    echo "127.0.0.1	localhost" > /etc/hosts
-    echo "::1	localhost" >> /etc/hosts
-    echo "127.0.1.1	$hostname.localdomain	$hostname" >> /etc/hosts
+    echo "127.0.0.1 localhost" > /etc/hosts
+    echo "::1 localhost" >> /etc/hosts
+    echo "127.0.1.1 $hostname.localdomain $hostname" >> /etc/hosts
 }
 
 function funcResetDefaults {
@@ -86,7 +86,7 @@ function funcResetPassword {
     chmod -R 000 /priv
     cryptsetup luksKillSlot -q /dev/disk/by-uuid/$luksUUID 1 --key-file=/tmp/luksKey.tmp # Disable recovery key, using temporary intermediate key created from caller
     cryptsetup luksChangeKey -q /dev/disk/by-uuid/$luksUUID --key-slot 0 --key-file=/tmp/luksKey.tmp $luksKey # Change (what was) user password to random keyfile
-    echo "monocleOS	UUID=$luksUUID	/priv/defaultKey.bin	luks" > /etc/crypttab.initramfs
+    echo "monocleOS UUID=$luksUUID /priv/defaultKey.bin luks" > /etc/crypttab.initramfs
     echo MODULES=\($kmodules\) | tee /etc/mkinitcpio.conf > /dev/null
     echo FILES=\(/priv/defaultKey.bin\) | tee -a /etc/mkinitcpio.conf > /dev/null
     echo HOOKS=\(base systemd plymouth keyboard autodetect sd-vconsole modconf kms block sd-encrypt lvm2 filesystems fsck shutdown\) | tee -a /etc/mkinitcpio.conf > /dev/null

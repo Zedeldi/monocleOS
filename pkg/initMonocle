@@ -76,7 +76,7 @@ echo "$1:$password" | chpasswd || { zenity --width 200 --error --title="Adding P
 # Assuming password change worked
 echo -e "$password" | cryptsetup luksChangeKey -q /dev/disk/by-uuid/$luksUUID --key-file=/priv/defaultKey.bin --key-slot 0 || { zenity --width 200 --error --title="Something Unexpected Happened" --text="Something went wrong. Do NOT poweroff your PC.\nPlease contact your system administrator."; exit 1; }
 echo "30"; sleep 1
-echo "# Adding password..."; echo "monocleOS	UUID=$luksUUID	none	luks" > /etc/crypttab.initramfs
+echo "# Adding password..."; echo "monocleOS UUID=$luksUUID none luks" > /etc/crypttab.initramfs
 echo "45"; sleep 1
 echo "# Adding password..."; sed -i '/FILES/d' /etc/mkinitcpio.conf
 echo "60"; sleep 1

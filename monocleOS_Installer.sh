@@ -344,12 +344,12 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "KEYMAP=$vconsole" > /etc/vconsole.conf
 echo "$hostname" > /etc/hostname
-echo "127.0.0.1	localhost" >> /etc/hosts
-echo "::1	localhost" >> /etc/hosts
-echo "127.0.1.1	$hostname.localdomain	$hostname" >> /etc/hosts
+echo "127.0.0.1 localhost" >> /etc/hosts
+echo "::1 localhost" >> /etc/hosts
+echo "127.0.1.1 $hostname.localdomain $hostname" >> /etc/hosts
 echo "$issue" > /etc/issue
 echo "" >> /etc/issue
-echo "monocleOS	UUID=$luksUUID	/priv/defaultKey.bin	luks" >> /etc/crypttab.initramfs
+echo "monocleOS UUID=$luksUUID /priv/defaultKey.bin luks" >> /etc/crypttab.initramfs
 echo '[multilib]
 Include = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
 pacman -Sy
